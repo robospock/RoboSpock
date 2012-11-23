@@ -21,3 +21,7 @@ bin/
 *.ipr
 *.iml
 out/
+
+# vim
+*.swp
+
