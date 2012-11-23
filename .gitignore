@@ -1,20 +1,23 @@
-# built application files
-*.apk
-*.ap_
+# All directories should end in / (information used by ide.gradle)
 
-# files for the dex VM
-*.dex
+# Ant
+ant/
 
-# Java class files
-*.class
+# Gradle
+.gradle/
+build/
 
-# generated files
-bin/
-gen/
+# Maven
+target/
 
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Eclipse project files
+# Eclipse
 .classpath
 .project
+.settings/
+bin/
+
+# IDEA
+*.iws
+*.ipr
+*.iml
+out/

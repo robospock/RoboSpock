@@ -1,0 +1,4 @@
+include 'TddAndroid', 'RoboSpock', 'TddAndroid/test/robolectric'
+
+project(':TddAndroid/test/robolectric').name = 'robolectric'
+
