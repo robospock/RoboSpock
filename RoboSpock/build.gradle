@@ -5,7 +5,7 @@ apply plugin: 'eclipse'
 version = "0.1"
 description = "Robolectric and Spock library"
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
