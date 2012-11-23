@@ -1,5 +1,6 @@
 apply plugin: "groovy"
 apply plugin: "idea"
+apply plugin: 'eclipse'
 
 version = "0.1"
 description = "Robolectric and Spock library"

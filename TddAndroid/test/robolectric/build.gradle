@@ -1,9 +1,15 @@
 apply plugin: "groovy"
 apply plugin: "idea"
+apply plugin: 'eclipse'
 
 version = "0.1"
 description = "Robolectric and Spock library"
 
+eclipse {
+    project {
+        name = 'TddAndroid-robolectric'
+    }
+}
 sourceCompatibility = 1.5
 
 repositories {
