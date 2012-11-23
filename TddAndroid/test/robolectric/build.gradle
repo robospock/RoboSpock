@@ -10,7 +10,7 @@ eclipse {
         name = 'TddAndroid-robolectric'
     }
 }
-sourceCompatibility = 1.5
+sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
