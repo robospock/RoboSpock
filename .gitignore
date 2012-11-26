@@ -1,4 +1,5 @@
 # All directories should end in / (information used by ide.gradle)
+tmp/
 
 # Ant
 ant/
