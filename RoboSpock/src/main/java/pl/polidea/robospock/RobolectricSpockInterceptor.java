@@ -1,6 +1,17 @@
 package pl.polidea.robospock;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.spockframework.runtime.extension.AbstractMethodInterceptor;
+import org.spockframework.runtime.extension.IMethodInvocation;
+
 import android.app.Application;
+
 import com.xtremelabs.robolectric.ApplicationResolver;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricConfig;
@@ -8,15 +19,10 @@ import com.xtremelabs.robolectric.res.ResourceLoader;
 import com.xtremelabs.robolectric.shadows.ShadowApplication;
 import com.xtremelabs.robolectric.util.DatabaseConfig;
 import com.xtremelabs.robolectric.util.SQLiteMap;
-import org.spockframework.runtime.extension.AbstractMethodInterceptor;
-import org.spockframework.runtime.extension.IMethodInvocation;
-
-import java.io.File;
-import java.util.*;
 
 public class RobolectricSpockInterceptor extends AbstractMethodInterceptor {
 
-    final private List<Class<?>> shadowClasses = new LinkedList<Class<?>>();
+    final private List<Class< ? >> shadowClasses = new LinkedList<Class< ? >>();
 
     private static Map<RobolectricConfig, ResourceLoader> resourceLoaderForRootAndDirectory = new HashMap<RobolectricConfig, ResourceLoader>();
 
@@ -26,11 +32,12 @@ public class RobolectricSpockInterceptor extends AbstractMethodInterceptor {
             try {
                 robolectricConfig.validate();
 
-                String rClassName = robolectricConfig.getRClassName();
-                Class rClass = Class.forName(rClassName);
-                resourceLoader = new ResourceLoader(robolectricConfig.getRealSdkVersion(), rClass, robolectricConfig.getResourceDirectory(), robolectricConfig.getAssetsDirectory());
+                final String rClassName = robolectricConfig.getRClassName();
+                final Class rClass = Class.forName(rClassName);
+                resourceLoader = new ResourceLoader(robolectricConfig.getRealSdkVersion(), rClass,
+                        robolectricConfig.getResourceDirectory(), robolectricConfig.getAssetsDirectory());
                 resourceLoaderForRootAndDirectory.put(robolectricConfig, resourceLoader);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -42,34 +49,38 @@ public class RobolectricSpockInterceptor extends AbstractMethodInterceptor {
         return resourceLoader;
     }
 
-    public RobolectricSpockInterceptor(Set<Class<?>> shadowClasses) {
+    public RobolectricSpockInterceptor(final Set<Class< ? >> shadowClasses) {
         this.shadowClasses.addAll(shadowClasses);
     }
 
     @Override
-    public void interceptInitializerMethod(IMethodInvocation invocation) throws Throwable {
+    public void interceptInitializerMethod(final IMethodInvocation invocation) throws Throwable {
         resetAndSetup(invocation);
     }
 
-    protected void resetAndSetup(IMethodInvocation invocation) throws Throwable {
+    protected void resetAndSetup(final IMethodInvocation invocation) throws Throwable {
         Robolectric.bindDefaultShadowClasses();
 
         Robolectric.bindShadowClasses(shadowClasses);
 
         Robolectric.resetStaticState();
 
-        // this creates new (empty) database (held statically! if app is already running it'll not clean it)
+        // this creates new (empty) database (held statically! if app is already
+        // running it'll not clean it)
         DatabaseConfig.setDatabaseMap(new SQLiteMap());
 
         // create base Application
-        RobolectricConfig config = new RobolectricConfig(new File("."));
-        Application application = new ApplicationResolver(config).resolveApplication();
+        final RobolectricConfig config = new RobolectricConfig(new File("."));
+        final Application application = new ApplicationResolver(config).resolveApplication();
 
-        // proceed with creating resource loader and binding to static Robolectric reference
-        ResourceLoader resourceLoader = createResourceLoader(config);
+        // proceed with creating resource loader and binding to static
+        // Robolectric reference
+        final ResourceLoader resourceLoader = createResourceLoader(config);
         Robolectric.application = ShadowApplication.bind(application, resourceLoader);
 
-        application.onCreate();
+        // TODO: I think we should omit this line, user in some cases would not
+        // like to call onCreate()
+        // application.onCreate();
 
         invocation.proceed();
     }
