@@ -1,17 +1,17 @@
 package pl.polidea.tddandroid.tasks;
 
-import pl.polidea.tddandroid.activity.MainActivity;
+import pl.polidea.tddandroid.activity.TaskActivity;
 import android.content.Context;
 
 public class StringAsycTask extends MyRoboAsycTask<String> {
     /**
      * 
      */
-    private final MainActivity mainActivity;
+    private final TaskActivity taskActivity;
 
-    public StringAsycTask(final MainActivity mainActivity, final Context context) {
+    public StringAsycTask(final TaskActivity taskActivity, final Context context) {
         super(context);
-        this.mainActivity = mainActivity;
+        this.taskActivity = taskActivity;
     }
 
     @Override
@@ -22,6 +22,6 @@ public class StringAsycTask extends MyRoboAsycTask<String> {
     @Override
     public void onSuccess(final String t) throws Exception {
         super.onSuccess(t);
-        this.mainActivity.setAsyncTest(t);
+        this.taskActivity.setAsyncTest(t);
     }
 }

@@ -1,14 +1,9 @@
 package pl.polidea.tddandroid.activity;
 
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 
 import junit.framework.Assert;
 
-import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,12 +22,10 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
-import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 import com.xtremelabs.robolectric.shadows.ShadowDialog;
 
 @RunWith(MyTestRunner.class)
 public class MainActivityTest {
-    private File FILE;
     @Inject WebInterface webInterface;
 
     @Inject DatabaseHelper databaseHelper;
@@ -40,10 +33,6 @@ public class MainActivityTest {
 
     @Before
     public void setup() throws Exception {
-
-        Class.forName("org.sqlite.SQLite").newInstance();
-
-        FILE =  new File(Robolectric.application.getCacheDir().getPath() + "/image");
         dao = databaseHelper.getDao(DatabaseObject.class);
         dao.create(new DatabaseObject("test", 4, 1));
         dao.create(new DatabaseObject("tset", 4, 2));
@@ -89,50 +78,6 @@ public class MainActivityTest {
 
         // then
         Assert.assertEquals("I have 16 MB", memory);
-    }
-
-    @Test
-    public void testAsyncText() {
-        // given
-        final MainActivity mainActivity = new MainActivity();
-        mainActivity.onCreate(null);
-
-        // when
-        final CharSequence memory = mainActivity.asyncText.getText();
-
-        // then
-        Assert.assertEquals("WebText", memory);
-    }
-
-    @Test
-    public void testWebText() throws IllegalStateException, ClientProtocolException, IOException {
-        // given
-        when(webInterface.execute("http://dev.polidea.pl/ext/szlif677557/text")).thenReturn("Hi! I'm text from ext :)");
-
-        final MainActivity mainActivity = new MainActivity();
-        mainActivity.onCreate(null);
-
-        // when
-        final CharSequence memory = mainActivity.webTv.getText();
-
-        // then
-        Assert.assertEquals("Hi! I'm text from ext :)", memory);
-    }
-
-    @Test
-    public void testWebImage() throws ClientProtocolException, IOException {
-        // given
-        when(webInterface.downloadFile("http://www.polidea.pl/CorporateIdentity/logo_100x60.png", FILE.getPath()))
-                .thenReturn(FILE);
-        ShadowBitmapFactory.provideWidthAndHeightHints(FILE.getPath(), 200, 300);
-        final MainActivity mainActivity = new MainActivity();
-        mainActivity.onCreate(null);
-
-        // when
-        mainActivity.loadBtn.performClick();
-
-        // then
-        Assert.assertNotNull(mainActivity.webIv.getDrawable());
     }
 
     @Test
