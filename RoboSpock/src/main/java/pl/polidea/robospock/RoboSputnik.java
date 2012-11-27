@@ -2,6 +2,7 @@ package pl.polidea.robospock;
 
 import java.lang.reflect.Constructor;
 
+import com.xtremelabs.robolectric.Robolectric;
 import org.codehaus.groovy.runtime.ArrayUtil;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -29,7 +30,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     private Runner sputnikRunner;
 
     public RoboSputnik(final Class< ? > clazz) throws InitializationError {
-
         final RobolectricClassLoader classLoader = createClassLoader();
 
         // this line prevents overloading class loader ? LOL

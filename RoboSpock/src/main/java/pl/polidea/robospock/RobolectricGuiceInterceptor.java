@@ -34,11 +34,11 @@ public class RobolectricGuiceInterceptor extends AbstractMethodInterceptor {
 
     @Override
     public void interceptInitializerMethod(IMethodInvocation invocation) throws Throwable {
+        invocation.proceed();
+
         rebuildRoboGuiceInjector();
 
         injectValues(invocation.getTarget());
-
-        invocation.proceed();
     }
 
     private void rebuildRoboGuiceInjector() {

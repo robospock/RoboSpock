@@ -19,7 +19,7 @@ repositories {
 dependencies {
     compile "org.roboguice:roboguice:2.0"
     compile "com.pivotallabs:robolectric:1.1"
-    compile "com.google.android:android:2.1.2"
+    compile "com.google.android:android:2.2.1"
 
     compile "org.spockframework:spock-core:0.6-groovy-1.8"
     // we've hit bug https://issues.jboss.org/browse/JASSIST-142
