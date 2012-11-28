@@ -18,8 +18,6 @@ public class RobolectricGuiceExtension extends AbstractAnnotationDrivenExtension
 
     @Override
     public void visitSpec(SpecInfo spec) {
-        if (moduleClasses.isEmpty()) return;
-
         RobolectricGuiceInterceptor interceptor = new RobolectricGuiceInterceptor(spec, moduleClasses);
         SpecInfo topSpec = spec.getTopSpec();
         topSpec.getInitializerMethod().addInterceptor(interceptor);
