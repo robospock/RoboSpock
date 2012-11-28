@@ -9,7 +9,7 @@ import com.google.inject.Module;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@ExtensionAnnotation(RobolectricGuiceExtension.class)
+//@ExtensionAnnotation(RobolectricGuiceExtension.class)
 @interface RobolectricGuiceModules {
 
     Class<? extends Module>[] value() default {};
