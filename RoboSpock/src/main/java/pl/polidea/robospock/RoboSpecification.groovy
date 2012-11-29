@@ -15,8 +15,19 @@ public abstract class RoboSpecification extends Specification {
 
     Set<Class<? extends Module>> moduleClasses = [];
 
+
     void modules(Closure closure){
+
+
         modules(new AbstractModule() {
+            def bind(Class c, Object o) {
+                bind(c).toInstance(o)
+            }
+
+            def install(Class c) {
+                install(c.newInstance())
+            }
+
             @Override
             protected void configure() {
                 closure.delegate = this
