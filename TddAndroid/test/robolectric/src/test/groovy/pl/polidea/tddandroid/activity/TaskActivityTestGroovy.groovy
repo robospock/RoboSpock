@@ -1,19 +1,16 @@
 package pl.polidea.tddandroid.activity
 
-import com.google.inject.AbstractModule
 import com.google.inject.Inject
+import com.xtremelabs.robolectric.Robolectric
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 import pl.polidea.robospock.RoboSpecification
 import pl.polidea.tddandroid.module.TestTaskExecutorModule
 import pl.polidea.tddandroid.web.WebInterface
-import com.google.inject.Binder
-import com.xtremelabs.robolectric.Robolectric
-import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 
-//@RobolectricGuiceModules([TestTaskExecutorModule])
 class TaskActivityTestGroovy extends RoboSpecification {
 
     @Inject WebInterface webInterface
-        def File
+    def File
 
     def "setup"() {
         modules {
@@ -35,7 +32,7 @@ class TaskActivityTestGroovy extends RoboSpecification {
     }
 
 
-    def "should display text from web"(){
+    def "should display text from web"() {
         given:
         webInterface.execute("http://dev.polidea.pl/ext/szlif677557/text") >> "Hi! I'm text from ext :)"
         def taskActivity = new TaskActivity()
@@ -48,10 +45,10 @@ class TaskActivityTestGroovy extends RoboSpecification {
         "Hi! I'm text from ext :)" == taskActivity.webTv.text
     }
 
-    def "should display image downloaded from web"(){
+    def "should display image downloaded from web"() {
         given:
-        webInterface.downloadFile("http://www.polidea.pl/CorporateIdentity/logo_100x60.png", file.path)  >> file
-        ShadowBitmapFactory.provideWidthAndHeightHints(file.path , 200, 300)
+        webInterface.downloadFile("http://www.polidea.pl/CorporateIdentity/logo_100x60.png", file.path) >> file
+        ShadowBitmapFactory.provideWidthAndHeightHints(file.path, 200, 300)
         def taskActivity = new TaskActivity()
 
         when:

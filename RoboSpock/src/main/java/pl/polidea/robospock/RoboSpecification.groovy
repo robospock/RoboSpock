@@ -8,6 +8,8 @@ import com.xtremelabs.robolectric.Robolectric
 import org.junit.runner.RunWith
 import roboguice.RoboGuice
 import spock.lang.Specification
+import com.google.inject.Guice
+import com.google.inject.ConfigurationException
 
 @RunWith(RoboSputnik)
 @UseShadows
@@ -25,7 +27,12 @@ public abstract class RoboSpecification extends Specification {
             }
 
             def install(Class c) {
-                install(c.newInstance())
+                def module = c.newInstance()
+                if (module instanceof AbstractModule) {
+                    install(module)
+                } else {
+                    addError("Installed class: " + c.getName() + " it's not Guice Abstract Module")
+                }
             }
 
             @Override
