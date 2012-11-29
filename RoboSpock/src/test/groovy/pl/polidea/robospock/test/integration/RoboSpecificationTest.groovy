@@ -1,19 +1,23 @@
 package pl.polidea.robospock.test.integration
 
+import com.google.inject.AbstractModule
 import com.google.inject.CreationException
 import pl.polidea.robospock.RoboSpecification
 
 import java.util.concurrent.Executor
-import com.google.inject.AbstractModule
 import javax.inject.Inject
+import com.google.inject.Provider
 
 class RoboSpecificationTest extends RoboSpecification {
 
     @Inject String someString
 
+    @Inject Object someObject
+    @Inject Object anotherObject
+
     def "should throw exception while installing non AbstractModule class"() {
         when:
-        modules {
+        inject {
             install String
         }
 
@@ -23,7 +27,7 @@ class RoboSpecificationTest extends RoboSpecification {
 
     def "should throw exception while binding class to wrong interface"() {
         when:
-        modules {
+        inject {
             bind Executor, String
         }
 
@@ -32,12 +36,12 @@ class RoboSpecificationTest extends RoboSpecification {
 
     }
 
-    def "should be able to install new guice module"(){
+    def "should be able to install new guice module"() {
         given:
         def module = Mock(AbstractModule)
 
         when:
-        modules{
+        inject {
             install module
         }
 
@@ -45,9 +49,9 @@ class RoboSpecificationTest extends RoboSpecification {
         notThrown(CreationException)
     }
 
-    def "should be able to bind a class to interface"(){
+    def "should be able to bind a class to interface"() {
         when:
-        modules{
+        inject {
             bind CharSequence, String
         }
 
@@ -63,7 +67,7 @@ class RoboSpecificationTest extends RoboSpecification {
 
         when:
         def before = someString
-        modules config
+        inject config
         def after = someString
 
         then: 'calling modules injected someString'
@@ -71,6 +75,19 @@ class RoboSpecificationTest extends RoboSpecification {
         after
     }
 
+    def "should bindInstance create same object when injecting"() {
+        when:
+        inject config
+
+        then:
+        same == (someObject.is(anotherObject))
+        equal == (someObject.equals(anotherObject))
+
+        where:
+        same | equal | config
+        true | true  | {bindInstance Object, 'asdf'}
+        false| true  | {bind(Object).toProvider(new Provider<Object>() {@Override Object get() {[]}})}
+    }
 }
 
 

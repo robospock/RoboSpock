@@ -8,6 +8,7 @@ import com.xtremelabs.robolectric.Robolectric
 import org.junit.runner.RunWith
 import roboguice.RoboGuice
 import spock.lang.Specification
+import javax.inject.Provider
 
 @RunWith(RoboSputnik)
 @UseShadows
@@ -15,20 +16,24 @@ public abstract class RoboSpecification extends Specification {
 
     Set<Class<? extends Module>> moduleClasses = [];
 
-
-    void modules(Closure closure) {
+    void inject(Closure closure) {
 
 
         modules(new AbstractModule() {
-            def bind(Class iface, Class clazz) {
-                if (clazz.interfaces.contains(iface)) {
-                    bind(iface).toInstance(clazz)
+
+            void bind(Class superClass, Class clazz) {
+                if (superClass.isAssignableFrom(clazz)) {
+                    bind(superClass).to(clazz)
                 } else {
-                    addError("Instance class " + clazz.getName() + " can't be mapped to " + iface.getName())
+                    addError("Instance class " + clazz.getName() + " can't be mapped to " + superClass.getName())
                 }
             }
 
-            def install(Class c) {
+            void bindInstance(Class superClass, Object object) {
+                bind(superClass).toInstance(object)
+            }
+
+            void install(Class c) {
                 def module = c.newInstance()
                 if (module instanceof AbstractModule) {
                     install(module)

@@ -13,7 +13,7 @@ class TaskActivityTestGroovy extends RoboSpecification {
     def File
 
     def "setup"() {
-        modules {
+        inject {
             install TestTaskExecutorModule
             bind WebInterface, Mock(WebInterface)
         }
