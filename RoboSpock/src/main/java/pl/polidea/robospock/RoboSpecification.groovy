@@ -20,8 +20,12 @@ public abstract class RoboSpecification extends Specification {
 
 
         modules(new AbstractModule() {
-            def bind(Class c, Object o) {
-                bind(c).toInstance(o)
+            def bind(Class iface, Class clazz) {
+                if (clazz.interfaces.contains(iface)) {
+                    bind(iface).toInstance(clazz)
+                } else {
+                    addError("Instance class " + clazz.getName() + " can't be mapped to " + iface.getName())
+                }
             }
 
             def install(Class c) {
