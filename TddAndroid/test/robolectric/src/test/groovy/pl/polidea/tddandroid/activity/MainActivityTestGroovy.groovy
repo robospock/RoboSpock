@@ -7,22 +7,22 @@ import com.xtremelabs.robolectric.Robolectric
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog
 import com.xtremelabs.robolectric.shadows.ShadowDialog
 import org.junit.runner.RunWith
+import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.RoboSputnik
 import pl.polidea.robospock.UseShadows
 import pl.polidea.tddandroid.database.DatabaseHelper
 import pl.polidea.tddandroid.database.DatabaseObject
 import pl.polidea.tddandroid.shadow.MyActivityManagerShadow
-import spock.lang.Specification
-import pl.polidea.robospock.RoboSpecification
 
 @RunWith(RoboSputnik)
 @UseShadows(MyActivityManagerShadow)
 class MainActivityTestGroovy extends RoboSpecification {
     @Inject DatabaseHelper databaseHelper;
 
-    def "setup"(){
+    def "setup"() {
         modules()
     }
+
     def "should display hello text"() {
         given:
         def mainActivity = new MainActivity()

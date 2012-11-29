@@ -1,29 +1,27 @@
 package pl.polidea.tddandroid.activity;
 
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-
+import com.google.inject.Inject;
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
 import junit.framework.Assert;
-
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import pl.polidea.tddandroid.MyTestRunner;
 import pl.polidea.tddandroid.web.WebInterface;
 
-import com.google.inject.Inject;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
+import java.io.File;
+import java.io.IOException;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(MyTestRunner.class)
 public class TaskActivityTest {
 
     private File FILE;
-    @Inject WebInterface webInterface;
+    @Inject
+    WebInterface webInterface;
 
     @Before
     public void setup() throws Exception {

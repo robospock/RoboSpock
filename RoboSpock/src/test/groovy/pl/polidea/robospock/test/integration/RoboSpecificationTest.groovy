@@ -1,9 +1,8 @@
 package pl.polidea.robospock.test.integration
 
-import pl.polidea.robospock.RoboSpecification
-import com.google.inject.ConfigurationException
-import javax.security.auth.login.CredentialException
 import com.google.inject.CreationException
+import pl.polidea.robospock.RoboSpecification
+
 import java.util.concurrent.Executor
 
 class RoboSpecificationTest extends RoboSpecification {
@@ -18,9 +17,9 @@ class RoboSpecificationTest extends RoboSpecification {
         thrown(CreationException)
     }
 
-    def "should throw exception while binding class to wrong interface"(){
+    def "should throw exception while binding class to wrong interface"() {
         when:
-        modules{
+        modules {
             bind Executor String
         }
 

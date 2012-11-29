@@ -8,8 +8,6 @@ import com.xtremelabs.robolectric.Robolectric
 import org.junit.runner.RunWith
 import roboguice.RoboGuice
 import spock.lang.Specification
-import com.google.inject.Guice
-import com.google.inject.ConfigurationException
 
 @RunWith(RoboSputnik)
 @UseShadows

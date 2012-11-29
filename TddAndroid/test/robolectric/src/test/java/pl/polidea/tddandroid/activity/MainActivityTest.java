@@ -1,34 +1,33 @@
 package pl.polidea.tddandroid.activity;
 
-import java.sql.SQLException;
-
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
-
-import pl.polidea.tddandroid.MyTestRunner;
-import pl.polidea.tddandroid.database.DatabaseHelper;
-import pl.polidea.tddandroid.database.DatabaseObject;
-import pl.polidea.tddandroid.web.WebInterface;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Button;
-
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
 import com.xtremelabs.robolectric.shadows.ShadowDialog;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import pl.polidea.tddandroid.MyTestRunner;
+import pl.polidea.tddandroid.database.DatabaseHelper;
+import pl.polidea.tddandroid.database.DatabaseObject;
+import pl.polidea.tddandroid.web.WebInterface;
+
+import java.sql.SQLException;
 
 @RunWith(MyTestRunner.class)
 public class MainActivityTest {
-    @Inject WebInterface webInterface;
+    @Inject
+    WebInterface webInterface;
 
-    @Inject DatabaseHelper databaseHelper;
+    @Inject
+    DatabaseHelper databaseHelper;
     Dao<DatabaseObject, Integer> dao;
 
     @Before
