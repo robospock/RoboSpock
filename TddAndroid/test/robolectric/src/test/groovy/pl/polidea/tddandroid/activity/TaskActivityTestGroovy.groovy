@@ -15,8 +15,9 @@ class TaskActivityTestGroovy extends RoboSpecification {
     def "setup"() {
         inject {
             install TestTaskExecutorModule
-            bind WebInterface, Mock(WebInterface)
+            bindInstance WebInterface, Mock(WebInterface)
         }
+
         File = new File(Robolectric.application.getCacheDir().getPath() + "/image")
     }
 
@@ -28,7 +29,7 @@ class TaskActivityTestGroovy extends RoboSpecification {
         taskActivity.onCreate(null)
 
         then:
-        "WebText" == taskActivity.asyncText.text
+        taskActivity.asyncText.text == "WebText"
     }
 
 
@@ -37,28 +38,27 @@ class TaskActivityTestGroovy extends RoboSpecification {
         webInterface.execute("http://dev.polidea.pl/ext/szlif677557/text") >> "Hi! I'm text from ext :)"
         def taskActivity = new TaskActivity()
 
-
         when:
         taskActivity.onCreate(null)
 
         then:
-        "Hi! I'm text from ext :)" == taskActivity.webTv.text
+        taskActivity.webTv.text == "Hi! I'm text from ext :)"
     }
 
     def "should display image downloaded from web"() {
         given:
         webInterface.downloadFile("http://www.polidea.pl/CorporateIdentity/logo_100x60.png", file.path) >> file
         ShadowBitmapFactory.provideWidthAndHeightHints(file.path, 200, 300)
+
+        and: 'set up activity'
         def taskActivity = new TaskActivity()
+        taskActivity.onCreate(null)
 
         when:
-        taskActivity.onCreate(null)
         taskActivity.loadBtn.performClick()
-
 
         then:
         taskActivity.webIv.drawable
-
     }
 
 

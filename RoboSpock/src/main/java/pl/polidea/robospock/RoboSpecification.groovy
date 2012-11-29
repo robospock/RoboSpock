@@ -8,7 +8,6 @@ import com.xtremelabs.robolectric.Robolectric
 import org.junit.runner.RunWith
 import roboguice.RoboGuice
 import spock.lang.Specification
-import javax.inject.Provider
 
 @RunWith(RoboSputnik)
 @UseShadows
@@ -19,7 +18,7 @@ public abstract class RoboSpecification extends Specification {
     void inject(Closure closure) {
 
 
-        modules(new AbstractModule() {
+        inject(new AbstractModule() {
 
             void bind(Class superClass, Class clazz) {
                 if (superClass.isAssignableFrom(clazz)) {
@@ -50,7 +49,7 @@ public abstract class RoboSpecification extends Specification {
         })
     }
 
-    void modules(Module... modules) {
+    void inject(Module... modules) {
 
         moduleClasses.addAll(modules)
 
