@@ -7,18 +7,21 @@ import pl.polidea.robospock.RobolectricGuiceModules
 import pl.polidea.tddandroid.module.TestTaskExecutorModule
 import pl.polidea.tddandroid.web.WebInterface
 import com.google.inject.Binder
+import com.xtremelabs.robolectric.Robolectric
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory
 
 //@RobolectricGuiceModules([TestTaskExecutorModule])
 class TaskActivityTestGroovy extends RoboSpecification {
 
     @Inject WebInterface webInterface
-
+        def File
 
     def "setup"() {
         modules {
-            install new TestTaskExecutorModule()
-            bind(WebInterface).toInstance(Mock(WebInterface))
+            install TestTaskExecutorModule
+            bind WebInterface, Mock(WebInterface)
         }
+        File = new File(Robolectric.application.getCacheDir().getPath() + "/image")
     }
 
     def "should load text from asyc task"() {
@@ -33,15 +36,32 @@ class TaskActivityTestGroovy extends RoboSpecification {
     }
 
 
-    def "test webinterface"(){
+    def "should display text from web"(){
         given:
-        webInterface.execute(_) >> "Hi"
+        webInterface.execute("http://dev.polidea.pl/ext/szlif677557/text") >> "Hi! I'm text from ext :)"
+        def taskActivity = new TaskActivity()
+
 
         when:
-        def text = webInterface.execute("")
+        taskActivity.onCreate(null)
 
         then:
-        "Hi" == text
+        "Hi! I'm text from ext :)" == taskActivity.webTv.text
+    }
+
+    def "should display image downloaded from web"(){
+        given:
+        webInterface.downloadFile("http://www.polidea.pl/CorporateIdentity/logo_100x60.png", file.path)  >> file
+        ShadowBitmapFactory.provideWidthAndHeightHints(file.path , 200, 300)
+        def taskActivity = new TaskActivity()
+
+        when:
+        taskActivity.onCreate(null)
+        taskActivity.loadBtn.performClick()
+
+
+        then:
+        taskActivity.webIv.drawable
 
     }
 
