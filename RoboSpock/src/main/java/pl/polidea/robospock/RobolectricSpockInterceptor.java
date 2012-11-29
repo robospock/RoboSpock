@@ -78,10 +78,6 @@ public class RobolectricSpockInterceptor extends AbstractMethodInterceptor {
         final ResourceLoader resourceLoader = createResourceLoader(config);
         Robolectric.application = ShadowApplication.bind(application, resourceLoader);
 
-        // TODO: I think we should omit this line, user in some cases would not
-        // like to call onCreate()
-        // application.onCreate();
-
         invocation.proceed();
     }
 }
