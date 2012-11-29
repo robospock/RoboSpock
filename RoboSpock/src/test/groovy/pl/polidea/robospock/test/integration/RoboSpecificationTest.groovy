@@ -5,8 +5,11 @@ import pl.polidea.robospock.RoboSpecification
 
 import java.util.concurrent.Executor
 import com.google.inject.AbstractModule
+import javax.inject.Inject
 
 class RoboSpecificationTest extends RoboSpecification {
+
+    @Inject String someString
 
     def "should throw exception while installing non AbstractModule class"() {
         when:
@@ -50,6 +53,22 @@ class RoboSpecificationTest extends RoboSpecification {
 
         then:
         notThrown(CreationException)
+    }
+
+    def "calling modules should inject stuff here"() {
+        given:
+        def config = {
+            bind(String).toInstance('any string')
+        }
+
+        when:
+        def before = someString
+        modules config
+        def after = someString
+
+        then: 'calling modules injected someString'
+        !before
+        after
     }
 
 }

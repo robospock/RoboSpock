@@ -106,6 +106,12 @@ class MainActivityTestGroovy extends RoboSpecification {
 
         then:
         3 * listenerMock.onClick(_, _)
+
+
+
+
+
+
     }
 
     def "should insert single object to database"() {
