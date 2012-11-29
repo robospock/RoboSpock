@@ -16,7 +16,7 @@ public abstract class RoboSpecification extends Specification {
     Set<Class<? extends Module>> moduleClasses = [];
 
 
-    void modules(Closure closure){
+    void modules(Closure closure) {
 
 
         modules(new AbstractModule() {
@@ -39,13 +39,6 @@ public abstract class RoboSpecification extends Specification {
     void modules(Module... modules) {
 
         moduleClasses.addAll(modules)
-
-        def modules2 = this.getClass().getAnnotation(RobolectricGuiceModules)
-        if (modules2) {
-            def list = Arrays.asList(modules2.value()).collect { it.newInstance()}
-
-            moduleClasses.addAll(list)
-        }
 
         RoboGuice.setBaseApplicationInjector(
                 Robolectric.application,

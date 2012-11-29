@@ -3,7 +3,6 @@ package pl.polidea.tddandroid.activity
 import com.google.inject.AbstractModule
 import com.google.inject.Inject
 import pl.polidea.robospock.RoboSpecification
-import pl.polidea.robospock.RobolectricGuiceModules
 import pl.polidea.tddandroid.module.TestTaskExecutorModule
 import pl.polidea.tddandroid.web.WebInterface
 import com.google.inject.Binder

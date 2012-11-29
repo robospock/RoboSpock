@@ -4,7 +4,7 @@ import spock.lang.Specification
 import android.app.Activity
 import pl.polidea.robospock.RoboSpecification
 
-class StubSpecifcation extends RoboSpecification {
+class StubSpecifcation extends Specification {
 
     def "should throw Stub! exception"() {
         when:
