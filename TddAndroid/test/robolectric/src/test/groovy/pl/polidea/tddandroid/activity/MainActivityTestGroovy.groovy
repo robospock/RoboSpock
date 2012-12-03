@@ -7,7 +7,7 @@ import com.xtremelabs.robolectric.Robolectric
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog
 import com.xtremelabs.robolectric.shadows.ShadowDialog
 import org.junit.runner.RunWith
-import pl.polidea.robospock.RoboSpecification
+import RoboSpecification
 import pl.polidea.robospock.RoboSputnik
 import pl.polidea.robospock.UseShadows
 import pl.polidea.tddandroid.database.DatabaseHelper

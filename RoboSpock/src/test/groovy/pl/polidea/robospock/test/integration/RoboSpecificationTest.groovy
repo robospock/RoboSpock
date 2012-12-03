@@ -2,11 +2,11 @@ package pl.polidea.robospock.test.integration
 
 import com.google.inject.AbstractModule
 import com.google.inject.CreationException
-import pl.polidea.robospock.RoboSpecification
 
 import java.util.concurrent.Executor
 import javax.inject.Inject
 import com.google.inject.Provider
+import pl.polidea.robospock.RoboSpecification
 
 class RoboSpecificationTest extends RoboSpecification {
 
