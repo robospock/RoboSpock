@@ -20,7 +20,7 @@ dependencies {
     compile "com.pivotallabs:robolectric:1.1"
     compile "com.google.android:android:2.2.1"
 
-    compile project(':TddAndroid')
+    test project(':TddAndroid')
 }
 
 test {
