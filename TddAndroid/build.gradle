@@ -1,5 +1,5 @@
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 apply plugin: 'java'
@@ -8,18 +8,18 @@ apply plugin: 'eclipse'
 
 eclipse {
     project {
-        natures = ['com.android.ide.eclipse.adt.AndroidNature','org.eclipse.jdt.core.javanature']
+        natures = ['com.android.ide.eclipse.adt.AndroidNature', 'org.eclipse.jdt.core.javanature']
         [
-            'com.android.ide.eclipse.adt.ResourceManagerBuilder',
-            'com.android.ide.eclipse.adt.PreCompilerBuilder',
-            'org.eclipse.jdt.core.javabuilder',
-            'com.android.ide.eclipse.adt.ApkBuilder'
-        ].each { buildCommand it }  
+                'com.android.ide.eclipse.adt.ResourceManagerBuilder',
+                'com.android.ide.eclipse.adt.PreCompilerBuilder',
+                'org.eclipse.jdt.core.javabuilder',
+                'com.android.ide.eclipse.adt.ApkBuilder'
+        ].each { buildCommand it }
     }
-    classpath{
+    classpath {
         file {
             whenMerged { classpath ->
-                classpath.entries.removeAll { entry -> entry.path.toString() == 'org.eclipse.jdt.launching.JRE_CONTAINER' } 
+                classpath.entries.removeAll { entry -> entry.path.toString() == 'org.eclipse.jdt.launching.JRE_CONTAINER' }
             }
         }
         containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK'
@@ -30,7 +30,7 @@ eclipse {
 sourceSets {
     main {
         java {
-            srcDirs 'src','gen'
+            srcDirs 'src', 'gen'
         }
     }
 }
@@ -46,5 +46,23 @@ idea {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(dir: 'libs', include: '*.jar')
 }
+
+compileJava.enabled = false
+
+//task compileAndroid << {
+////    ant.exec(executable: "ant") {
+////        arg(value: "debug")
+////    }
+//    println( ["ant", "debug"].execute().text )
+//}
+
+task compileAndroid(type:Exec) {
+    commandLine 'ant', 'debug'
+}
+
+compileJava.dependsOn {
+    compileAndroid
+}
+

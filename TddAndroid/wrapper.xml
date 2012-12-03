@@ -1,0 +1,4 @@
+<project>
+<include file="gradle_build.xml" as="nested"/>
+</project>
+
