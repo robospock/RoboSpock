@@ -7,13 +7,13 @@ import com.xtremelabs.robolectric.Robolectric
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog
 import com.xtremelabs.robolectric.shadows.ShadowDialog
 import org.junit.runner.RunWith
-import RoboSpecification
 import pl.polidea.robospock.RoboSputnik
 import pl.polidea.robospock.UseShadows
 import pl.polidea.tddandroid.database.DatabaseHelper
 import pl.polidea.tddandroid.database.DatabaseObject
 import pl.polidea.tddandroid.shadow.MyActivityManagerShadow
 import java.sql.SQLException
+import pl.polidea.robospock.RoboSpecification
 
 @RunWith(RoboSputnik)
 @UseShadows(MyActivityManagerShadow)

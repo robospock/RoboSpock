@@ -24,7 +24,7 @@ dependencies {
 }
 
 test {
-    workingDir = rootProject.file('test/TddAndroid')
+    workingDir file('test/TddAndroid')
 }
 
 clean {

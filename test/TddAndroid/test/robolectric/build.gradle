@@ -21,6 +21,7 @@ dependencies {
     compile "com.pivotallabs:robolectric:1.1"
     compile "com.google.android:android:2.2.1"
 
+    groovy "org.codehaus.groovy:groovy-all:1.8.6"
     compile "org.spockframework:spock-core:0.6-groovy-1.8"
     // we've hit bug https://issues.jboss.org/browse/JASSIST-142
     // with previous version. Robolectric uses 3.14.0, but seems to be working with this as well
@@ -37,5 +38,5 @@ dependencies {
 }
 
 test {
-    workingDir = rootProject.file('TddAndroid')
+    workingDir = project(':TddAndroid').file('.')
 }
