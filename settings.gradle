@@ -1,4 +1,6 @@
-include 'TddAndroid', 'RoboSpock', 'TddAndroid/test/robolectric'
+include 'test/TddAndroid'
+project(':test/TddAndroid').name = 'TddAndroid'
 
-project(':TddAndroid/test/robolectric').name = 'robolectric'
+include 'test/TddAndroid/test/robolectric'
+project(':test/TddAndroid/test/robolectric').name = 'robolectric'
 

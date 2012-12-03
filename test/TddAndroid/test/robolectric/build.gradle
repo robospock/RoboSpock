@@ -28,7 +28,7 @@ dependencies {
 
     compile 'org.mockito:mockito-all:1.9.0'
     compile project(':TddAndroid')
-    compile project(':RoboSpock')
+    compile rootProject
 
     // not safe to go to 4.11
     compile 'junit:junit:4.10'
