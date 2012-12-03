@@ -1,8 +1,11 @@
-apply plugin: "groovy"
-apply plugin: "idea"
-apply plugin: 'eclipse'
+apply {
+    plugin 'groovy'
+    plugin "idea"
+    plugin 'eclipse'
+    plugin 'signing'
+    plugin 'maven'
+}
 
-version = "0.1"
 description = "Robolectric and Spock library"
 
 sourceCompatibility = 1.6
@@ -20,7 +23,7 @@ dependencies {
     compile "com.pivotallabs:robolectric:1.1"
     compile "com.google.android:android:2.2.1"
 
-    test project(':TddAndroid')
+    testCompile project(':TddAndroid')
 }
 
 test {
@@ -29,4 +32,84 @@ test {
 
 clean {
     delete 'tmp'
+}
+
+// Set up for Sonatype OSS repository
+def isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+// custom tasks for creating source/javadoc jars
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// add javadoc/source jar the artifacts
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+group = 'pl.polidea'
+def artifactId = 'robospock'
+
+def uploadUsername = project.hasProperty('sonatypeUsername') ? project['sonatypeUsername'] : ''
+def uploadPassword = project.hasProperty('sonatypePassword') ? project['sonatypePassword'] : ''
+
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> if (isReleaseVersion) { signing.signPom(deployment) } }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+            authentication(userName: uploadUsername, password: uploadPassword)
+        }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: uploadUsername, password: uploadPassword)
+        }
+
+        pom.artifactId = artifactId
+
+        pom.project {
+            name 'RoboSpock'
+            packaging 'jar'
+            description 'Library brings Robolectric unit tests option to Spock testing framework.'
+            url 'https://github.com/Polidea/Robospock'
+
+            scm {
+                url 'scm:git@github.com:Polidea/RoboSpock.git'
+                connection 'scm:git@github.com:Polidea/RoboSpock.git'
+                developerConnection 'scm:git@github.com:Polidea/RoboSpock.git'
+            }
+
+            licenses {
+                license {
+                    name 'Apache License 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0'
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'przemyslaw.jakubczyk'
+                    name 'Przemysław Jakubczyk'
+                }
+                developer {
+                    id 'wojtek.erbetowski'
+                    name 'Wojtek Erbetowski'
+                }
+            }
+        }
+
+    }
 }
