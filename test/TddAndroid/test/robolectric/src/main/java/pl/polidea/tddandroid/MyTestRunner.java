@@ -10,7 +10,6 @@ import pl.polidea.tddandroid.shadow.MyActivityManagerShadow;
 import roboguice.RoboGuice;
 
 public class MyTestRunner extends RobolectricTestRunner {
-
     public MyTestRunner(final Class<?> testClass) throws InitializationError {
         super(testClass);
     }

@@ -1,11 +1,11 @@
 package pl.polidea.tddandroid.tasks;
 
-import pl.polidea.tddandroid.activity.TaskActivity;
 import android.content.Context;
+import pl.polidea.tddandroid.activity.TaskActivity;
 
 public class StringAsycTask extends MyRoboAsycTask<String> {
     /**
-     * 
+     *
      */
     private final TaskActivity taskActivity;
 

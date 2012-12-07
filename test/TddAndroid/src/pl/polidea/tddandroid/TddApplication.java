@@ -1,16 +1,14 @@
 package pl.polidea.tddandroid;
 
-import pl.polidea.tddandroid.module.TaskExecutorModule;
-import pl.polidea.tddandroid.module.WebModule;
-import roboguice.RoboGuice;
 import android.app.Application;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
+import pl.polidea.tddandroid.module.TaskExecutorModule;
+import pl.polidea.tddandroid.module.WebModule;
+import roboguice.RoboGuice;
 
 public class TddApplication extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();

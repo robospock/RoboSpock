@@ -1,12 +1,5 @@
 package pl.polidea.tddandroid.activity;
 
-import pl.polidea.tddandroid.R;
-import pl.polidea.tddandroid.tasks.BitmapAsycTask;
-import pl.polidea.tddandroid.tasks.StringAsycTask;
-import pl.polidea.tddandroid.tasks.TaskExecutorInterface;
-import pl.polidea.tddandroid.tasks.WebAsyncTask;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -14,13 +7,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.inject.Inject;
+import pl.polidea.tddandroid.R;
+import pl.polidea.tddandroid.tasks.BitmapAsycTask;
+import pl.polidea.tddandroid.tasks.StringAsycTask;
+import pl.polidea.tddandroid.tasks.TaskExecutorInterface;
+import pl.polidea.tddandroid.tasks.WebAsyncTask;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 public class TaskActivity extends RoboActivity {
     static final String URL = "http://dev.polidea.pl/ext/szlif677557/text";
     static final String IMAGE_URL = "http://www.polidea.pl/CorporateIdentity/logo_100x60.png";
-
     @Inject TaskExecutorInterface taskExecutorInterface;
     @InjectView(R.id.load_button) Button loadBtn;
     @InjectView(R.id.async_text) TextView asyncText;
@@ -35,7 +33,6 @@ public class TaskActivity extends RoboActivity {
         taskExecutorInterface.execute(new WebAsyncTask(this, URL));
 
         loadBtn.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(final View v) {
                 taskExecutorInterface.execute(new BitmapAsycTask(TaskActivity.this, IMAGE_URL));

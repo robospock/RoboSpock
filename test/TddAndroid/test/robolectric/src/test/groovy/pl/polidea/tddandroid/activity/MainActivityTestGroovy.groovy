@@ -7,13 +7,14 @@ import com.xtremelabs.robolectric.Robolectric
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog
 import com.xtremelabs.robolectric.shadows.ShadowDialog
 import org.junit.runner.RunWith
+import pl.polidea.robospock.RoboSpecification
 import pl.polidea.robospock.RoboSputnik
 import pl.polidea.robospock.UseShadows
 import pl.polidea.tddandroid.database.DatabaseHelper
 import pl.polidea.tddandroid.database.DatabaseObject
 import pl.polidea.tddandroid.shadow.MyActivityManagerShadow
+
 import java.sql.SQLException
-import pl.polidea.robospock.RoboSpecification
 
 @RunWith(RoboSputnik)
 @UseShadows(MyActivityManagerShadow)
@@ -31,8 +32,13 @@ class MainActivityTestGroovy extends RoboSpecification {
         when:
         mainActivity.onCreate(null)
 
+        def tv = Robolectric.shadowOf(mainActivity.helloTv)
+
+        tv.right = 6
+        tv.left = 1
         then:
-        mainActivity.helloTv.text == "Hello Szlif!"
+        tv.text == "Hello Szlif!"
+        tv.getWidth() == 5
     }
 
     def "should change text when button is clicked"() {
@@ -114,7 +120,7 @@ class MainActivityTestGroovy extends RoboSpecification {
         ].each { dialog.getButton(it).performClick() }
 
         then:
-        3 * listenerMock.onClick(_,_)
+        3 * listenerMock.onClick(_, _)
     }
 
     def "should insert single object to database"() {

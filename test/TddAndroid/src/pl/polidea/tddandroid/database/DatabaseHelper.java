@@ -1,20 +1,18 @@
 package pl.polidea.tddandroid.database;
 
-import java.sql.SQLException;
-
-import roboguice.inject.RoboApplicationProvider;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import roboguice.inject.RoboApplicationProvider;
+
+import java.sql.SQLException;
 
 @Singleton
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-
     @Inject
     public DatabaseHelper(final RoboApplicationProvider<Application> application) {
         super(application.get(), "myDatabase", null, 1);
@@ -31,7 +29,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final ConnectionSource connectionSource, final int oldVersion,
-            final int newVersion) {
+                          final int newVersion) {
         try {
 
             TableUtils.dropTable(connectionSource, DatabaseObject.class, true);

@@ -25,7 +25,6 @@ import java.sql.SQLException;
 public class MainActivityTest {
     @Inject
     WebInterface webInterface;
-
     @Inject
     DatabaseHelper databaseHelper;
     Dao<DatabaseObject, Integer> dao;

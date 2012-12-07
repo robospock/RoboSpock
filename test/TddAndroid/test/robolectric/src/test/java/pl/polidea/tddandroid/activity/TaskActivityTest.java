@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MyTestRunner.class)
 public class TaskActivityTest {
-
     private File FILE;
     @Inject
     WebInterface webInterface;

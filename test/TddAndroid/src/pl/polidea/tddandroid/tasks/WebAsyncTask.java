@@ -1,12 +1,10 @@
 package pl.polidea.tddandroid.tasks;
 
+import com.google.inject.Inject;
 import pl.polidea.tddandroid.activity.TaskActivity;
 import pl.polidea.tddandroid.web.WebInterface;
 
-import com.google.inject.Inject;
-
 public class WebAsyncTask extends MyRoboAsycTask<String> {
-
     private final String resource;
     @Inject WebInterface webInterface;
     private final TaskActivity actvity;

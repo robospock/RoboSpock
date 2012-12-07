@@ -1,9 +1,8 @@
 package pl.polidea.tddandroid.module;
 
+import com.google.inject.AbstractModule;
 import pl.polidea.tddandroid.tasks.TaskExecutorInterface;
 import pl.polidea.tddandroid.tasks.TestTaskExecutor;
-
-import com.google.inject.AbstractModule;
 
 public class TestTaskExecutorModule extends AbstractModule {
     @Override
