@@ -70,4 +70,5 @@ The installation can be also done just by downloading <a href="http://search.mav
 <li><a href="http://code.google.com/p/google-guice/downloads/detail?name=guice-2.0-no_aop.jar&can=2&q=">Guice 2.0 no aop</a><br>For RoboGuice installation please check <a hrefhttp://code.google.com/p/roboguice/wiki/Installation"> this link</a></li>
 </ul>
 
-For maven and jar projects please configure your test project in your IDE as Groovy based project (not Java).
+For maven and jar projects please configure your test project in your IDE as Groovy based project (not only Java).
+You may find sources and Javadocs in <a href="http://search.maven.org/#browse%7C285983449">Central Maven Repository</a> as well.
