@@ -72,6 +72,8 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         classLoader.delegateLoadingOf(RobolectricConfig.class.getName());
         classLoader.delegateLoadingOf(DatabaseConfig.DatabaseMap.class.getName());
         classLoader.delegateLoadingOf(android.R.class.getName());
+        // That caused conflicts with accessing natvie SQLite database from file
+        classLoader.delegateLoadingOf(DatabaseConfig.class.getName());
 
         return classLoader;
     }
