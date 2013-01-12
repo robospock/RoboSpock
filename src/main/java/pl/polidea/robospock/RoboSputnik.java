@@ -6,6 +6,7 @@ import com.xtremelabs.robolectric.bytecode.RobolectricClassLoader;
 import com.xtremelabs.robolectric.bytecode.ShadowWrangler;
 import com.xtremelabs.robolectric.internal.RealObject;
 import com.xtremelabs.robolectric.util.DatabaseConfig;
+import groovy.lang.GroovyObject;
 import org.codehaus.groovy.runtime.ArrayUtil;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -27,6 +28,10 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
         // this line prevents overloading class loader ? LOL
         classLoader.delegateLoadingOf(ArrayUtil.class.getName());
+
+        // skip long taking Groovy classes loading
+        classLoader.delegateLoadingOf("groovy.lang.");
+        classLoader.delegateLoadingOf("org.codehaus.groovy.");
 
         final Class<?> delegateClass = classLoader.bootstrap(Sputnik.class);
         try {

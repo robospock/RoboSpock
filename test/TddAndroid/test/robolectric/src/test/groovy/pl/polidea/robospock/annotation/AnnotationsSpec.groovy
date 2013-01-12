@@ -31,10 +31,8 @@ abstract class AnnotationsSpec extends Specification{
 
 @UseShadows(MyActivityManagerShadow)
 @RunWith(RoboSputnik)
-class ShadowSputnikSpec extends AnnotationsSpec {
-}
+class ShadowSputnikSpec extends AnnotationsSpec {}
 
 @RunWith(RoboSputnik)
 @UseShadows(MyActivityManagerShadow)
-class SputnikShadowSpec extends AnnotationsSpec{
-}
+class SputnikShadowSpec extends AnnotationsSpec{}

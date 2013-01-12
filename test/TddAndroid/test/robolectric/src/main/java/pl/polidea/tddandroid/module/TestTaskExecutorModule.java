@@ -10,4 +10,5 @@ public class TestTaskExecutorModule extends AbstractModule {
     protected void configure() {
         bind(TaskExecutorInterface.class).to(TestTaskExecutor.class);
     }
+
 }
