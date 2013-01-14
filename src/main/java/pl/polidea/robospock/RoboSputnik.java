@@ -23,11 +23,16 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     // "cannot cast from Sputnik to Sputnik"
     private Runner sputnikRunner;
 
-    public RoboSputnik(final Class<?> clazz) throws InitializationError {
-        final RobolectricClassLoader classLoader = createClassLoader();
+    private static RobolectricClassLoader classLoader;
 
-        // this line prevents overloading class loader ? LOL
-        classLoader.delegateLoadingOf(ArrayUtil.class.getName());
+    public RoboSputnik(final Class<?> clazz) throws InitializationError {
+
+        //Reuse classloader to decrease perm usage and speed up tests
+        if (classLoader == null) {
+            classLoader = createClassLoader();
+            // this line prevents overloading class loader ? LOL
+            classLoader.delegateLoadingOf(ArrayUtil.class.getName());
+        }
 
         // skip long taking Groovy classes loading
         classLoader.delegateLoadingOf("groovy.lang.");

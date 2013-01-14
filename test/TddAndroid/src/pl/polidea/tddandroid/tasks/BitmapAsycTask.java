@@ -1,16 +1,14 @@
 package pl.polidea.tddandroid.tasks;
 
-import java.io.File;
-
-import pl.polidea.tddandroid.activity.TaskActivity;
-import pl.polidea.tddandroid.web.WebInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import com.google.inject.Inject;
+import pl.polidea.tddandroid.activity.TaskActivity;
+import pl.polidea.tddandroid.web.WebInterface;
+
+import java.io.File;
 
 public class BitmapAsycTask extends MyRoboAsycTask<Bitmap> {
-
     private final TaskActivity taskActivity;
     @Inject WebInterface webInterface;
     private final String url;

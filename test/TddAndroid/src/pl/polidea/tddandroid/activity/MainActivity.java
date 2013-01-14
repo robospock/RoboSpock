@@ -1,8 +1,5 @@
 package pl.polidea.tddandroid.activity;
 
-import pl.polidea.tddandroid.R;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,17 +10,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.inject.Inject;
+import pl.polidea.tddandroid.R;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 public class MainActivity extends RoboActivity implements android.content.DialogInterface.OnClickListener {
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
 
     @InjectView(R.id.hello) TextView helloTv;
     @InjectView(R.id.button) Button button;
     @InjectView(R.id.button_text) TextView buttonTv;
     @Inject ActivityManager activityManager;
     @InjectView(R.id.memory_text) TextView memoryTv;
-
     DialogInterface.OnClickListener dialogListener = this;
 
     @Override
@@ -33,7 +36,6 @@ public class MainActivity extends RoboActivity implements android.content.Dialog
 
         helloTv.setText("Hello Szlif!");
         button.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(final View v) {
                 buttonTv.setText("Clicked !");
@@ -42,13 +44,6 @@ public class MainActivity extends RoboActivity implements android.content.Dialog
         });
 
         memoryTv.setText("I have " + activityManager.getMemoryClass() / 4 + " MB");
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
     }
 
     @Override
@@ -62,8 +57,8 @@ public class MainActivity extends RoboActivity implements android.content.Dialog
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         switch (which) {
-        default:
-            break;
+            default:
+                break;
         }
     }
 }

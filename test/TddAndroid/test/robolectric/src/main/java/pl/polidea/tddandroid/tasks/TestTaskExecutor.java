@@ -1,7 +1,6 @@
 package pl.polidea.tddandroid.tasks;
 
 public class TestTaskExecutor implements TaskExecutorInterface {
-
     @Override
     public void execute(final MyRoboAsycTask task) {
         try {

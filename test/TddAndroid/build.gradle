@@ -62,14 +62,14 @@ compileJava.enabled = false
 //    println( ["ant", "debug"].execute().text )
 //}
 
-task updateAndroidProject(type:Exec) {
+task updateAndroidProject(type: Exec) {
     inputs.file file('project.properties')
     outputs.file file('local.properties')
 
     commandLine 'android', 'update', 'project', '-p', '.'
 }
 
-task compileAndroid(type:Exec) {
+task compileAndroid(type: Exec) {
     inputs.file file('build.xml')
     inputs.dir file('src')
     inputs.dir file('res')

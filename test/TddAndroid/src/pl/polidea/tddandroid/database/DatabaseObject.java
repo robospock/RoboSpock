@@ -3,7 +3,6 @@ package pl.polidea.tddandroid.database;
 import com.j256.ormlite.field.DatabaseField;
 
 public class DatabaseObject {
-
     @DatabaseField public String title;
     @DatabaseField public int size;
     @DatabaseField(id = true) public int id;
