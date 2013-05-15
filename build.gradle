@@ -101,7 +101,7 @@ uploadArchives {
 
             developers {
                 developer {
-                    id 'przemyslaw.jakubczyk'
+                    id 'pjakubczyk'
                     name 'Przemysław Jakubczyk'
                 }
                 developer {
