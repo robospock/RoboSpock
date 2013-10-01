@@ -43,7 +43,7 @@ clean {
 
 idea {
     module {
-        jdkName = 'Android 2.2 Platform'
+        jdkName = 'Android 4.2.2 Platform'
 
         sourceDirs += file('gen')
     }

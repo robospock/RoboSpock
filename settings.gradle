@@ -1,6 +1,6 @@
 include 'test/TddAndroid'
 project(':test/TddAndroid').name = 'TddAndroid'
 
-include 'test/TddAndroid/test/robolectric'
-project(':test/TddAndroid/test/robolectric').name = 'robolectric'
+//include 'test/TddAndroid/test/robolectric'
+//project(':test/TddAndroid/test/robolectric').name = 'robolectric'
 
