@@ -2,11 +2,6 @@ package pl.polidea.robospock.internal;
 
 import android.app.Application;
 import android.os.Build;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 import org.robolectric.bytecode.ClassHandler;
@@ -17,6 +12,7 @@ import org.robolectric.internal.ParallelUniverse;
 import org.robolectric.internal.ParallelUniverseInterface;
 import org.robolectric.res.ResourceLoader;
 import org.robolectric.util.DatabaseConfig;
+import org.robolectric.util.SQLiteMap;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
@@ -34,7 +30,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
     private static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
 
     private static ShadowMap mainShadowMap;
-    private DatabaseConfig.DatabaseMap databaseMap;
+    private DatabaseConfig.DatabaseMap databaseMap = new SQLiteMap();
     private TestLifecycle<Application> testLifecycle;
 
     private SpecInfo specInfo;
@@ -55,8 +51,6 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
 
     @Override
     public void interceptSpecExecution(IMethodInvocation invocation) throws Throwable {
-
-        Class<?> bootstrappedTestClass = invocation.getSpec().getReflection();
 
         configureShadows(sdkEnvironment, config);
 
@@ -225,12 +219,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         synchronized (RobolectricTestRunner.class) {
             if (mainShadowMap != null) return mainShadowMap;
 
-            mainShadowMap = new ShadowMap.Builder()
-                    //.addShadowClasses(RobolectricBase.DEFAULT_SHADOW_CLASSES)
-                    .build();
-            //mainShadowMap = new ShadowMap.Builder()
-            //        .addShadowClasses(RobolectricBase.DEFAULT_SHADOW_CLASSES)
-            //        .build();
+            mainShadowMap = new ShadowMap.Builder().build();
             return mainShadowMap;
         }
     }

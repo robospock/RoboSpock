@@ -1,4 +1,4 @@
-package pl.polidea.robospock.test.integration;
+package pl.polidea.robospock.internal;
 
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -17,7 +17,6 @@ import org.robolectric.res.ResourceLoader;
 import org.robolectric.util.AnnotationUtil;
 import org.spockframework.runtime.Sputnik;
 import org.spockframework.runtime.model.SpecInfo;
-import pl.polidea.robospock.internal.RoboSpockInterceptor;
 
 import java.io.IOException;
 import java.io.InputStream;
