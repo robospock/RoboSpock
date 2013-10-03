@@ -6,7 +6,7 @@ apply {
     plugin 'maven'
 }
 
-description = "Robolectric and Spock library"
+description = "RoboSpock testing library"
 
 sourceCompatibility = 1.6
 
@@ -23,16 +23,22 @@ dependencies {
     compile "org.robolectric:robolectric:2.1.1"
     compile "com.google.android:android:4.1.1.4"
 
-    testCompile project(':TddAndroid')
+    testCompile project(':antApp')
 }
 
 test {
-    workingDir file('test/TddAndroid')
+    workingDir project(':antApp').file('.')
 }
 
 clean {
     delete 'tmp'
 }
+
+/*
+ *
+ * It's all about OSS Sonatype from now to the bottom
+ *
+ */
 
 // Set up for Sonatype OSS repository
 def isReleaseVersion = !version.endsWith("SNAPSHOT")
