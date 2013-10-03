@@ -10,10 +10,11 @@ import org.robolectric.shadows.ShadowDialog
 import pl.polidea.robospock.activity.MainActivity
 import pl.polidea.robospock.database.DatabaseHelper
 import pl.polidea.robospock.database.DatabaseObject
+import pl.polidea.robospock.shadow.MyActivityManagerShadow
 
 import java.sql.SQLException
 
-@Config(shadows = MyActivityManagerShadow)
+@Config(shadows = [MyActivityManagerShadow])
 class MainActivityTestGroovy extends RoboSpecification {
     @Inject DatabaseHelper databaseHelper;
 

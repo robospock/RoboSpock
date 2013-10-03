@@ -1,6 +1,6 @@
 include 'applications/AntBasedAndroidApplication'
 project(':applications/AntBasedAndroidApplication').name = 'antApp'
 
-include 'applications/AntBasedAndroidApplication/test/robolectric'
-project(':applications/AntBasedAndroidApplication/test/robolectric').name = 'robolectric'
+include 'applications/AntBasedAndroidApplication/test/robospock'
+project(':applications/AntBasedAndroidApplication/test/robospock').name = 'antApp-robospock-tests'
 
