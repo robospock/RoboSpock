@@ -1,9 +1,7 @@
 package pl.polidea.robospock
 
-import com.google.inject.ConfigurationException
 import org.robolectric.annotation.Config
 import pl.polidea.robospock.activity.MainActivity
-import pl.polidea.robospock.activity.TaskActivity
 import pl.polidea.robospock.shadow.MyActivityManagerShadow
 
 @Config(shadows = [MyActivityManagerShadow])
