@@ -1,9 +1,12 @@
 package pl.polidea.robospock
 
 import com.google.inject.ConfigurationException
+import org.robolectric.annotation.Config
 import pl.polidea.robospock.activity.MainActivity
 import pl.polidea.robospock.activity.TaskActivity
+import pl.polidea.robospock.shadow.MyActivityManagerShadow
 
+@Config(shadows = [MyActivityManagerShadow])
 class DefaultSpec extends RoboSpecification {
 
     def "should inject view using RoboGuice"() {
@@ -27,18 +30,7 @@ class DefaultSpec extends RoboSpecification {
         def text = mainActivity.memoryTv.text
 
         then:
-        text == "I have 0 MB"
-    }
-
-    def "should instance null Async Task Executor"() {
-        given:
-        def taskActivity = new TaskActivity()
-
-        when:
-        taskActivity.onCreate(null)
-
-        then:
-        thrown(ConfigurationException)
+        text == "I have 16 MB"
     }
 
 }
