@@ -8,8 +8,7 @@ repositories {
 dependencies {
   testCompile 'pl.polidea:RoboSpock:0.4-SNAPSHOT'
 
-  testCompile project(":basic")
-  testCompile project(":basic").android.applicationVariants.toList().first().javaCompile.outputs.files
-  testCompile project(":basic").android.applicationVariants.toList().first().javaCompile.classpath
-  testCompile files(project(":basic").plugins.findPlugin("android").runtimeJarList)
+  testCompile project(":gradleApp").android.applicationVariants.toList().first().javaCompile.outputs.files
+  testCompile project(":gradleApp").android.applicationVariants.toList().first().javaCompile.classpath
+  testCompile files(project(":gradleApp").plugins.findPlugin("android").runtimeJarList)
 }
