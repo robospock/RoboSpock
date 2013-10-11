@@ -1,5 +1,6 @@
 package pl.polidea.robospock
 
+import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 import com.android.tests.basic.Main
 
@@ -8,11 +9,11 @@ class DefaultSpec extends RoboSpecification {
 
   def "should inject view using RoboGuice"() {
     given:
-    def mainActivity = new Main()
-    mainActivity.onCreate(null)
+    def mainActivityBuilder = Robolectric.buildActivity(Main)
+    mainActivityBuilder.create()
 
     when:
-    def text = mainActivity.findViewById(com.android.tests.basic.R.id.text).text
+    def text = mainActivityBuilder.get().findViewById(com.android.tests.basic.R.id.text).text
 
     then:
     text == "Test App - Basic"
