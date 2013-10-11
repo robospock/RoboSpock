@@ -13,7 +13,7 @@ class DefaultSpec extends RoboSpecification {
     mainActivity.onCreate(null)
 
     when:
-    def text = mainActivity.textView.text
+    def text = mainActivity.findViewById(com.android.tests.basic.R.id.text).text
 
     then:
     text == "Test App - Basic"
