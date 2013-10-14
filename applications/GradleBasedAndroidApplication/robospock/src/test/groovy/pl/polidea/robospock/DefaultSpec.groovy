@@ -7,7 +7,7 @@ import com.android.tests.basic.Main
 @Config(manifest = "../basic/src/main/AndroidManifest.xml")
 class DefaultSpec extends RoboSpecification {
 
-  def "should inject view using RoboGuice"() {
+  def "should find text view and compare text value"() {
     given:
     def mainActivityBuilder = Robolectric.buildActivity(Main)
     mainActivityBuilder.create()
