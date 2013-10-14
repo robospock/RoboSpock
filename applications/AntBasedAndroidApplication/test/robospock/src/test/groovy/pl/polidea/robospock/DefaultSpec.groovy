@@ -1,5 +1,6 @@
 package pl.polidea.robospock
 
+import org.robolectric.annotation.Config
 import pl.polidea.robospock.activity.MainActivity
 import pl.polidea.robospock.shadow.MyActivityManagerShadow
 
