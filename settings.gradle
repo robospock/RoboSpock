@@ -3,4 +3,3 @@ project(':applications/AntBasedAndroidApplication').name = 'antApp'
 
 include 'applications/AntBasedAndroidApplication/test/robospock'
 project(':applications/AntBasedAndroidApplication/test/robospock').name = 'antApp-robospock-tests'
-
