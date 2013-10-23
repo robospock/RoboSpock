@@ -27,3 +27,6 @@ out/
 # vim
 *.swp
 
+# Android
+local.properties
+
