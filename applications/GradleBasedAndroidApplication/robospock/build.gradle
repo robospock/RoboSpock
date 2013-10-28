@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'groovy'
+apply plugin: 'idea'
 apply plugin: 'android-test'
 
 repositories {

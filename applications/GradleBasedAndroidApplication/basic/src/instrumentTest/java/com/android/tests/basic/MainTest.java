@@ -35,4 +35,3 @@ public class MainTest extends ActivityInstrumentationTestCase2<Main> {
         assertNotNull(mTextView);
     }
 }
-
