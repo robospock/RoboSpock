@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>RoboSpock - awesome Android unit testing</title>
+</head>
+
+<body>
+<div id="container">
+    <div class="inner">
+
+        <header>
+            <h1>Robospock</h1>
+            <h2>Awesome unit testing for Android</h2>
+        </header>
+
+        <section id="main_content">
+            {{ content }}
+            <p>RoboSpock makes life a bit easier. Developer just needs to extend RoboSpecification. That's it! You can test now your Android apps with Spock.</p>
+
+            <h2></h2>
+
+            <p>Here we will show some simple examples how to program in RoboSpock.
+                The test below is basic test in Robolectric.</p>
+
+<pre><code>@Test
+    public void testHelloText() {
+    // given
+    final TextView textView = new TextView(Robolectric.application);
+
+    // when
+    textView.setText("Hello")
+
+    // then
+    Assert.assertEquals("Hello", textView.getText());
+    }
+</code></pre>
+
+            <p>We use given/when/then as comments to mark which parts of tests are responsible for preparation, action and assertion. Assertion is done via Assert.assertEquals.</p>
+
+            <p>Converting the same to RoboSpock will look like this:</p>
+
+<pre><code>def "should display hello text"() {
+    given:
+    def textView = new TextView(Robolectric.application)
+
+    when:
+    textView.setText("Hello")
+
+    then:
+    textView.text == "Hello"
+    }
+</code></pre>
+
+            <p>First of all we can use human readable sentences for method naming. Second of all using dynamic typing. Third of all no ';'. These things we get from Groovy. Spock introduced keywords for 'given', 'when', 'then' (and few more) so from this time we point which part of code is really preparation or assertion. For example 'then' part has to have asserion, otherwise Spock will close with warning text. There is Android integration done by Robolectric. 'textView' exists so we can check its content by calling 'field' text not method getText() - Groovy automagically transform .text to getText(). Assertion is done by simple logic expression not by unit static method.</p>
+
+            <p>Does it look great?!</p>
+
+            <h1>
+                <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+            <p>We advice to install RoboSpock using gradle by adding the line to dependencies</p>
+
+<pre><code>compile 'pl.polidea:robospock:0.1'
+</code></pre>
+
+            <p>and remember to use groovy plugin</p>
+
+<pre><code>apply plugin: 'groovy'
+</code></pre>
+
+            <p>If you prefer maven for building test application please add this text to your pom.xml</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;pl.polidea&lt;/groupId&gt;
+    &lt;artifactId&gt;robospock&lt;/artifactId&gt;
+    &lt;version&gt;0.1&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre>
+
+            <p>The installation can be also done just by downloading <a href="http://search.maven.org/remotecontent?filepath=pl/polidea/robospock/0.1/robospock-0.1.jar">jar</a>. Remember to get the dependencies:</p>
+
+            <ul>
+                <li><a href="http://search.maven.org/remotecontent?filepath=org/spockframework/spock-core/0.6-groovy-1.8/spock-core-0.6-groovy-1.8.jar">Spock</a></li>
+                <li><a href="http://search.maven.org/remotecontent?filepath=com/pivotallabs/robolectric/1.1/robolectric-1.1-jar-with-dependencies.jar">Robolectric with denedencies</a></li>
+                <li><a href="http://search.maven.org/remotecontent?filepath=org/roboguice/roboguice/2.0/roboguice-2.0.jar">RoboGuice</a></li>
+                <li>
+                    <a href="http://code.google.com/p/google-guice/downloads/detail?name=guice-2.0-no_aop.jar">Guice 2.0 no aop</a><br>For RoboGuice installation please check <a href="http://code.google.com/p/roboguice/wiki/Installation"> this link</a>
+                </li>
+            </ul><p>For maven and jar projects please configure your test project in your IDE as Groovy based project (not only Java).
+            You may find sources and Javadocs in <a href="http://search.maven.org/#browse%7C285983449">Central Maven Repository</a> as well.</p>
+        </section>
+
+        <footer>
+            Robospock is maintained by <a href="https://github.com/Polidea">Polidea</a><br>
+            This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+            try {
+                var pageTracker = _gat._getTracker("UA-45012184-1");
+                pageTracker._trackPageview();
+            } catch(err) {}
+        </script>
+
+    </div>
+</div>
+</body>
+</html>
