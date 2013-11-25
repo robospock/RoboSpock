@@ -1,4 +1,177 @@
 ---
 layout: main
 ---
-test
+
+<!--<div id="myCarousel" class="carousel slide">-->
+    <!--&lt;!&ndash; Indicators &ndash;&gt;-->
+    <!--<ol class="carousel-indicators">-->
+        <!--<li data-target="#myCarousel" data-slide-to="0" class="active"></li>-->
+        <!--<li data-target="#myCarousel" data-slide-to="1"></li>-->
+        <!--<li data-target="#myCarousel" data-slide-to="2"></li>-->
+    <!--</ol>-->
+
+    <!--&lt;!&ndash; Wrapper for slides &ndash;&gt;-->
+    <!--<div class="carousel-inner">-->
+        <!--<div class="item active">-->
+            <!--<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide One');"></div>-->
+            <!--<div class="carousel-caption">-->
+                <!--<h1>RoboSpock</h1>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="item">-->
+            <!--<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Two');"></div>-->
+            <!--<div class="carousel-caption">-->
+                <!--<h1>Ready to Style &amp; Add Content</h1>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="item">-->
+            <!--<div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide Three');"></div>-->
+            <!--<div class="carousel-caption">-->
+                <!--<h1>Additional Layout Options at <a href="http://startbootstrap.com">http://startbootstrap.com</a></h1>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!--&lt;!&ndash; Controls &ndash;&gt;-->
+    <!--<a class="left carousel-control" href="#myCarousel" data-slide="prev">-->
+        <!--<span class="icon-prev"></span>-->
+    <!--</a>-->
+    <!--<a class="right carousel-control" href="#myCarousel" data-slide="next">-->
+        <!--<span class="icon-next"></span>-->
+    <!--</a>-->
+<!--</div>-->
+
+<div class="section">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <h3><i class="fa fa-bolt"></i> Fast</h3>
+                <p>RoboSpock tests are executed on the JVM. That means no DEXing or deployment time is wasted to execute  your unit tests.</p>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <h3><i class="fa fa-unlock-alt"></i> Minimal</h3>
+                <p>RoboSpock glues several frameworks together and enables you to work with them directly.</p>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <h3><i class="fa fa-check-circle"></i> Batteries included</h3>
+                <p>Enjoy the support for Spock framework, Groovy language and RoboGuice</p>
+            </div>
+        </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+</div><!-- /.section -->
+
+<div class="section-colored">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Welcome</h3>
+
+                <p>RoboSpock combines two great test frameworks and lets you get the best of both - to run fast unit test written with Groovy on local JVM.</p>
+                <p>It integrates well with Gradle build system and works with older Ant based projects.</p>
+
+                <hr>
+            </div>
+        </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+</div><!-- /.section-colored -->
+
+<div class="section">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <pre><code class="prettyprint">def "should display hello text"() {
+    given:
+    def textView = new TextView(Robolectric.application)
+
+    expect:
+    textView.text == "Hello"
+}
+                </code></pre>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <h2>Thanks to RoboSpock you can</h2>
+                <ul>
+                    <li>Unit test Android code with Spock and Groovy</li>
+                    <li>Write readable specifications</li>
+                    <li>Execute tests fast on JVM</li>
+                    <li>Mock your objects and test interactions</li>
+                    <li>Specify behavior of Android SDK classes</li>
+                    <li>Modify runtime dependencies configured with RoboGuice</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="section-colored">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <h2>Installation</h2>
+                <p>
+                    For every build tools Android projects has it's clashes with IDE support.
+                    We've done our best to show you how to integrate your whole environment
+                    for both Ant and Gradle (New Build System).
+                </p>
+                <h3>Gradle</h3>
+                <p>Simply add a dependency to your Gradle build file.</p>
+                <h3>Ant</h3>
+                <p>Still on Ant, huh? Here will be some tips you soon.</p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <pre><code class="prettyprint">apply plugin: 'groovy'
+apply plugin: 'android-test' // from navada
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  testCompile project(':gradleApp') // NBS app
+  testCompile 'pl.polidea:RoboSpock:0.4-SNAPSHOT'
+}
+</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<div class="container">-->
+
+    <!--<div class="row well">-->
+        <!--<div class="col-lg-8 col-md-8">-->
+            <!--<h4>'Modern Business' is a ready-to-use, Bootstrap 3 updated, multi-purpose HTML theme!</h4>-->
+            <!--<p>For more templates and more page options that you can integrate into this website template, visit Start Bootstrap!</p>-->
+        <!--</div>-->
+        <!--<div class="col-lg-4 col-md-4">-->
+            <!--<a class="btn btn-lg btn-primary pull-right" href="http://startbootstrap.com">See More Templates!</a>-->
+        <!--</div>-->
+    <!--</div>&lt;!&ndash; /.row &ndash;&gt;-->
+
+<!--</div>&lt;!&ndash; /.container &ndash;&gt;-->
+
+<div class="container">
+
+    <hr>
+
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Polidea 2013</p>
+            </div>
+        </div>
+    </footer>
+</div>
