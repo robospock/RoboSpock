@@ -3,7 +3,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.5.+'
+    classpath 'com.android.tools.build:gradle:0.7.+'
   }
 }
 apply plugin: 'android'
@@ -37,8 +37,8 @@ android {
     minSdkVersion 16
     targetSdkVersion 16
 
-    buildConfig "private final static boolean DEFAULT = true;",  \
-                     "private final static String FOO = \"foo\";"
+    buildConfigField "boolean", "DEFAULT", "true"
+    buildConfigField "String", "FOO", "foo"
   }
 
   buildTypes {
@@ -46,7 +46,7 @@ android {
       packageNameSuffix ".debug"
       signingConfig signingConfigs.myConfig
 
-      buildConfig "private final static boolean DEBUG2 = false;"
+      buildConfigField "boolean", "DEBUG2", "false"
     }
   }
 
