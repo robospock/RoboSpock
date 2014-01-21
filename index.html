@@ -131,7 +131,7 @@ layout: main
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <pre><code class="prettyprint">apply plugin: 'groovy'
-apply plugin: 'android-test' // from navada
+apply plugin: 'robospock' // from org.robospock:robospock-plugin:0.0.1
 
 repositories {
   mavenLocal()
@@ -139,8 +139,9 @@ repositories {
 }
 
 dependencies {
-  testCompile project(':gradleApp') // NBS app
-  testCompile 'pl.polidea:RoboSpock:0.4-SNAPSHOT'
+  compile "org.codehaus.groovy:groovy-all:1.8.6"
+  compile 'org.robospock:robospock:0.4'
+  compile project(':gradleApp') // NBS app
 }
 </code></pre>
             </div>
