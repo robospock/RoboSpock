@@ -130,19 +130,30 @@ layout: main
                 <p>Still on Ant, huh? Here will be some tips you soon.</p>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
-                <pre><code class="prettyprint">apply plugin: 'groovy'
-apply plugin: 'robospock' // from org.robospock:robospock-plugin:0.0.1
+                <pre><code class="prettyprint">buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:0.7.+'
+    classpath 'org.robospock:robospock-plugin:0.2'
+  }
+}
 
 repositories {
-  mavenLocal()
   mavenCentral()
 }
+
+apply plugin: 'groovy'
+apply plugin: 'robospock'
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:1.8.6"
   compile 'org.robospock:robospock:0.4'
-  compile project(':gradleApp') // NBS app
+  compile project(':androidApp') // NBS app
 }
+
 </code></pre>
             </div>
         </div>
