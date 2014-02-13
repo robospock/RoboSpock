@@ -38,7 +38,7 @@ android {
     targetSdkVersion 16
 
     buildConfigField "boolean", "DEFAULT", "true"
-    buildConfigField "String", "FOO", "foo"
+    buildConfigField "String", "FOO", '"foo"'
   }
 
   buildTypes {
