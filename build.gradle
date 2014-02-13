@@ -1,6 +1,6 @@
 apply {
     plugin 'groovy'
-    plugin "idea"
+    plugin 'idea'
     plugin 'eclipse'
     plugin 'signing'
     plugin 'maven'
@@ -119,4 +119,8 @@ uploadArchives {
         }
 
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.9'
 }
