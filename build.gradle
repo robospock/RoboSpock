@@ -1,13 +1,12 @@
 apply {
     plugin 'groovy'
-    plugin 'idea'
-    plugin 'eclipse'
     plugin 'signing'
     plugin 'maven'
 }
 
-
-description = "RoboSpock testing library"
+def artifactId = 'robospock'
+group = 'org.robospock'
+description = 'RoboSpock testing library'
 
 sourceCompatibility = 1.6
 
@@ -35,6 +34,10 @@ clean {
     delete 'tmp'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.9'
+}
+
 /*
  *
  * It's all about OSS Sonatype from now to the bottom
@@ -42,7 +45,7 @@ clean {
  */
 
 // Set up for Sonatype OSS repository
-def isReleaseVersion = !version.endsWith("SNAPSHOT")
+def isReleaseVersion = !version.endsWith('SNAPSHOT')
 
 // custom tasks for creating source/javadoc jars
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -62,25 +65,26 @@ artifacts {
 }
 
 signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    required { isReleaseVersion && gradle.taskGraph.hasTask('uploadArchives') }
     sign configurations.archives
 }
-
-group = 'org.robospock'
-def artifactId = 'robospock'
 
 def uploadUsername = project.hasProperty('sonatypeUsername') ? project['sonatypeUsername'] : ''
 def uploadPassword = project.hasProperty('sonatypePassword') ? project['sonatypePassword'] : ''
 
 uploadArchives {
     repositories.mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> if (isReleaseVersion) { signing.signPom(deployment) } }
+        beforeDeployment { MavenDeployment deployment ->
+            if (isReleaseVersion) {
+                signing.signPom(deployment)
+            }
+        }
 
-        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
             authentication(userName: uploadUsername, password: uploadPassword)
         }
 
-        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
             authentication(userName: uploadUsername, password: uploadPassword)
         }
 
@@ -117,10 +121,5 @@ uploadArchives {
                 }
             }
         }
-
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.9'
 }
