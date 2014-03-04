@@ -20,6 +20,7 @@ import org.spockframework.runtime.model.SpecInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -149,16 +150,25 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
             return null;
         }
 
-        FsFile fsFile = Fs.currentDirectory();
-        String manifestStr = config.manifest().equals(Config.DEFAULT) ? "AndroidManifest.xml" : config.manifest();
-        FsFile manifestFile = fsFile.join(manifestStr);
+        boolean propertyAvailable = false;
+        FsFile manifestFile = null;
+        String manifestProperty = System.getProperty("android.manifest");
+        if (config.manifest().equals(Config.DEFAULT) && manifestProperty != null) {
+            manifestFile = Fs.fileFromPath(manifestProperty);
+            propertyAvailable = true;
+        } else {
+            FsFile fsFile = Fs.currentDirectory();
+            String manifestStr = config.manifest().equals(Config.DEFAULT) ? "AndroidManifest.xml" : config.manifest();
+            manifestFile = fsFile.join(manifestStr);
+        }
+
         synchronized (envHolder) {
             AndroidManifest appManifest;
             appManifest = envHolder.appManifestsByFile.get(manifestFile);
             if (appManifest == null) {
 
                 long startTime = System.currentTimeMillis();
-                appManifest = createAppManifest(manifestFile);
+                appManifest = propertyAvailable ? createAppManifestFromProperty(manifestFile) : createAppManifest(manifestFile);
                 if (DocumentLoader.DEBUG_PERF)
                     System.out.println(String.format("%4dms spent in %s", System.currentTimeMillis() - startTime, manifestFile));
 
@@ -178,6 +188,51 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
         FsFile appBaseDir = manifestFile.getParent();
         return new AndroidManifest(manifestFile, appBaseDir.join("res"), appBaseDir.join("assets"));
+    }
+
+    protected AndroidManifest createAppManifestFromProperty(FsFile manifestFile) {
+        String resProperty = System.getProperty("android.resources");
+        String assetsProperty = System.getProperty("android.assets");
+        AndroidManifest manifest = new AndroidManifest(manifestFile, Fs.fileFromPath(resProperty), Fs.fileFromPath(assetsProperty));
+        String packageProperty = System.getProperty("android.package");
+
+        System.out.println("manifest:" + manifestFile.getPath());
+        System.out.println("resources:" + resProperty);
+        System.out.println("assets:" + assetsProperty);
+        System.out.println("package:" + packageProperty);
+
+        try {
+            setPackageName(manifest, packageProperty);
+        } catch (IllegalArgumentException e) {
+            System.out.println("WARNING: Faild to set package name for " + manifestFile.getPath() + ".");
+        }
+        return manifest;
+    }
+
+
+    private void setPackageName(AndroidManifest manifest, String packageName) {
+        Class<AndroidManifest> type = AndroidManifest.class;
+        try {
+            Method setPackageNameMethod = type.getMethod("setPackageName", String.class);
+            setPackageNameMethod.setAccessible(true);
+            setPackageNameMethod.invoke(manifest, packageName);
+            return;
+        } catch (NoSuchMethodException e) {
+            try {
+
+                //Force execute parseAndroidManifest.
+                manifest.getPackageName();
+
+                Field packageNameField = type.getDeclaredField("packageName");
+                packageNameField.setAccessible(true);
+                packageNameField.set(manifest, packageName);
+                return;
+            } catch (Exception fieldError) {
+                throw new IllegalArgumentException(fieldError);
+            }
+        } catch (Exception methodError) {
+            throw new IllegalArgumentException(methodError);
+        }
     }
 
     private SdkEnvironment getEnvironment(final AndroidManifest appManifest, final Config config) {
