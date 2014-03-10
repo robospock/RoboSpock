@@ -196,15 +196,12 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         AndroidManifest manifest = new AndroidManifest(manifestFile, Fs.fileFromPath(resProperty), Fs.fileFromPath(assetsProperty));
         String packageProperty = System.getProperty("android.package");
 
-        System.out.println("manifest:" + manifestFile.getPath());
-        System.out.println("resources:" + resProperty);
-        System.out.println("assets:" + assetsProperty);
-        System.out.println("package:" + packageProperty);
-
-        try {
-            setPackageName(manifest, packageProperty);
-        } catch (IllegalArgumentException e) {
-            System.out.println("WARNING: Faild to set package name for " + manifestFile.getPath() + ".");
+        if (packageProperty != null) {
+            try {
+                setPackageName(manifest, packageProperty);
+            } catch (IllegalArgumentException e) {
+                System.out.println("WARNING: Faild to set package name for " + manifestFile.getPath() + ".");
+            }
         }
         return manifest;
     }

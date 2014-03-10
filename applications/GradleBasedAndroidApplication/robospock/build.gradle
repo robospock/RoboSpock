@@ -6,8 +6,8 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.5.+'
-    classpath 'com.novoda:gradle-android-test-plugin:0.9.1-SNAPSHOT'
+    classpath 'com.android.tools.build:gradle:0.8.+'
+    classpath 'com.novoda:gradle-android-test-plugin:0.9.3-SNAPSHOT'
   }
 }
 
@@ -26,4 +26,4 @@ dependencies {
   testCompile rootProject
 }
 
-android.projectUnderTest project(':gradleApp')
+android.projectUnderTest ':gradleApp'
