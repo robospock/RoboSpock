@@ -27,7 +27,7 @@ dependencies {
     // with previous version. Robolectric uses 3.14.0, but seems to be working with this as well
 //    compile "org.javassist:javassist:3.15.0-GA"
 //
-//    compile 'org.mockito:mockito-all:1.9.0'
+    compile 'org.mockito:mockito-all:1.9.0'
     compile project(':antApp')
     compile rootProject
 

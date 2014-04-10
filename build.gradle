@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:1.8.6"
-    compile "org.spockframework:spock-core:0.6-groovy-1.8"
+    compile "org.spockframework:spock-core:0.7-groovy-1.8"
 
     // Android part
     //compile "org.roboguice:roboguice:2.0"
