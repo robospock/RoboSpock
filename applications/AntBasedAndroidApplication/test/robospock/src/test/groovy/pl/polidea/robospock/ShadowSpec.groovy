@@ -1,5 +1,6 @@
 package pl.polidea.robospock
 
+import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 import pl.polidea.robospock.activity.MainActivity
 import pl.polidea.robospock.shadow.MyActivityManagerShadow
@@ -9,8 +10,7 @@ class ShadowSpec extends RoboSpecification {
 
     def "shouldCompile"() {
         given:
-        def mainActivity = new MainActivity()
-        mainActivity.onCreate(null);
+        def mainActivity = Robolectric.buildActivity(MainActivity).create().get()
 
         when:
         def text = mainActivity.memoryTv.text
