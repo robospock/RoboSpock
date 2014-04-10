@@ -10,4 +10,4 @@ project(':applications/GradleBasedAndroidApplication/basic').name = 'gradleApp'
 include 'applications/GradleBasedAndroidApplication/robospock'
 project(':applications/GradleBasedAndroidApplication/robospock').name = 'gradleApp-robospock-tests'
 
-project(':').name = 'robospock'
+include 'robospock'

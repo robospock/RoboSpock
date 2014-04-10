@@ -23,7 +23,7 @@ repositories {
 dependencies {
   testCompile project(':gradleApp')
 //  testCompile 'pl.polidea:RoboSpock:0.4-SNAPSHOT'
-  testCompile rootProject
+  testCompile project(':robospock')
 }
 
 android.projectUnderTest ':gradleApp'
