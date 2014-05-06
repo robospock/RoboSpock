@@ -9,11 +9,10 @@ class DefaultSpec extends RoboSpecification {
 
   def "should find text view and compare text value"() {
     given:
-    def mainActivityBuilder = Robolectric.buildActivity(Main)
-    mainActivityBuilder.create()
+    def mainActivity = Robolectric.buildActivity(Main).create().get()
 
     when:
-    def text = mainActivityBuilder.get().findViewById(com.android.tests.basic.R.id.text).text
+    def text = mainActivity.findViewById(com.android.tests.basic.R.id.text).text
 
     then:
     text == "Test App - Basic"

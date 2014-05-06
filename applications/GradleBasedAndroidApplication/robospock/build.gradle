@@ -6,14 +6,14 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.8.+'
-    classpath 'com.novoda:gradle-android-test-plugin:0.9.3-SNAPSHOT'
+//    classpath 'com.android.tools.build:gradle:0.8.+'
+//    classpath 'com.novoda:gradle-android-test-plugin:0.9.3-SNAPSHOT'
   }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'idea'
-apply plugin: 'android-test'
+//apply plugin: 'idea'
+//apply plugin: 'android-test'
 
 repositories {
   mavenLocal()
@@ -26,4 +26,19 @@ dependencies {
   testCompile project(':robospock')
 }
 
-android.projectUnderTest ':gradleApp'
+sourceSets.test.java.srcDirs = ['../basic/src/main/java', '../basic/build/source/r/debug']
+
+test {
+    testLogging {
+        lifecycle {
+            exceptionFormat "full"
+        }
+    }
+
+//    workingDir = '../basic/src/main'
+
+}
+
+tasks["test"].dependsOn project(":gradleApp").tasks["compileDebugJava"]
+
+//android.projectUnderTest ':gradleApp'
