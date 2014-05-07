@@ -1,0 +1,44 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    maven {
+      url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+  }
+  dependencies {
+//    classpath 'com.android.tools.build:gradle:0.8.+'
+//    classpath 'com.novoda:gradle-android-test-plugin:0.9.3-SNAPSHOT'
+  }
+}
+
+apply plugin: 'groovy'
+//apply plugin: 'idea'
+//apply plugin: 'android-test'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  testCompile project(':gradleApp')
+//  testCompile 'pl.polidea:RoboSpock:0.4-SNAPSHOT'
+  testCompile project(':robospock')
+}
+
+sourceSets.test.java.srcDirs = ['../basic/src/main/java', '../basic/build/source/r/debug']
+
+test {
+    testLogging {
+        lifecycle {
+            exceptionFormat "full"
+        }
+    }
+
+//    workingDir = '../basic/src/main'
+
+}
+
+tasks["test"].dependsOn project(":gradleApp").tasks["compileDebugJava"]
+
+//android.projectUnderTest ':gradleApp'

@@ -1,5 +1,4 @@
 # All directories should end in / (information used by ide.gradle)
-tmp/
 
 # Ant
 ant/
@@ -22,11 +21,8 @@ bin/
 *.ipr
 *.iml
 out/
-.idea/
-
-# vim
-*.swp
 
 # Android
-local.properties
-
+gen/
+tmp/
+local\.properties

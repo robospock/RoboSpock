@@ -1,0 +1,42 @@
+apply plugin: "groovy"
+apply plugin: "idea"
+apply plugin: 'eclipse'
+
+version = "0.1"
+description = "RoboSpock test application"
+
+eclipse {
+    project {
+        name = 'antApp-robospock-tests'
+    }
+}
+sourceCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    compile "org.roboguice:roboguice:2.0"
+//    compile "org.robolectric:robolectric:2.1.1"
+//    compile "com.google.android:android:4.1.1.4"
+
+//    groovy "org.codehaus.groovy:groovy-all:1.8.6"
+//    compile "org.spockframework:spock-core:0.6-groovy-1.8"
+    // we've hit bug https://issues.jboss.org/browse/JASSIST-142
+    // with previous version. Robolectric uses 3.14.0, but seems to be working with this as well
+//    compile "org.javassist:javassist:3.15.0-GA"
+//
+    compile 'org.mockito:mockito-all:1.9.0'
+    compile project(':antApp')
+    compile project(':robospock')
+
+    // not safe to go to 4.11
+//    compile 'junit:junit:4.10'
+
+//    testCompile 'org.xerial:sqlite-jdbc:3.7.2'
+}
+
+test {
+    workingDir = project(':antApp').file('.')
+}

@@ -1,0 +1,97 @@
+/*
+ * Don't get fooled by build.gradle existence.
+ * This is old Ant-based Android application.
+ *
+ * The script mimics some of the Ant's behavior,
+ * to have a gradle subproject for testing purposes.
+ *
+ * Use this module in IDE as regular Android (non-NBS) project.
+ *
+ */
+
+repositories {
+    mavenCentral()
+}
+
+apply {
+    plugin 'java' // thanks to that we get some important lifecycle elements, but turn off java compiler itself
+
+    // IDE module code generation
+    plugin 'idea'
+    plugin 'eclipse'
+}
+
+// Extend eclipse metadata generated output as Android project. Not perfect but helpful
+eclipse {
+    project {
+        natures = ['com.android.ide.eclipse.adt.AndroidNature', 'org.eclipse.jdt.core.javanature']
+        [
+                'com.android.ide.eclipse.adt.ResourceManagerBuilder',
+                'com.android.ide.eclipse.adt.PreCompilerBuilder',
+                'org.eclipse.jdt.core.javabuilder',
+                'com.android.ide.eclipse.adt.ApkBuilder'
+        ].each { buildCommand it }
+    }
+
+    classpath {
+        file {
+            whenMerged { classpath ->
+                classpath.entries.removeAll { entry -> entry.path.toString() == 'org.eclipse.jdt.launching.JRE_CONTAINER' }
+            }
+        }
+        containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK'
+    }
+}
+
+// Intellij IDEA needs some extra configuration as well
+idea {
+    module {
+        jdkName = 'Android 4.2.2 Platform'
+
+        sourceDirs += file('gen')
+    }
+}
+
+// thanks to that robospock tests will know where the compiled classes are
+// by only depending on this module
+sourceSets {
+    main {
+        java {
+            srcDirs 'src', 'gen'
+        }
+
+        output.classesDir = 'bin/classes'
+    }
+}
+
+clean {
+    delete 'gen'
+}
+
+// For compilation purposes, normally handled by NBS, but in old-school ant config we need to say it out loud
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+task updateAndroidProject(type: Exec) {
+    inputs.file file('project.properties')
+    outputs.file file('local.properties')
+
+    commandLine 'android', 'update', 'project', '-p', '.'
+}
+
+task compileAndroid(type: Exec) {
+    inputs.file file('build.xml')
+    inputs.dir file('src')
+    inputs.dir file('res')
+    inputs.dir file('assets')
+
+    outputs.dir file('gen')
+
+    commandLine 'ant', 'debug'
+}
+
+// 'gradle classes' will now trigger only android project build
+compileJava.enabled = false
+compileAndroid.dependsOn updateAndroidProject
+compileJava.dependsOn compileAndroid
