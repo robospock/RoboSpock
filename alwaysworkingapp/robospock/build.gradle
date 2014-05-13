@@ -1,0 +1,43 @@
+def props = new Properties()
+file("../local.properties").withInputStream {
+    stream -> props.load(stream)
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url new File(props['sdk.dir'] + "/extras/android/m2repository/").toURI()
+    }
+}
+
+apply plugin: 'groovy'
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:1.8.6"
+    compile 'org.robospock:robospock:0.4.4'
+    compile 'cglib:cglib-nodep:3.1'
+
+    compile 'com.jakewharton:butterknife:4.0.1'
+    compile project(":app")
+}
+
+sourceSets.main.java.srcDirs += ['../app/src/main/java', '../app/build/source/r/debug']
+
+test {
+    systemProperty 'ro.build.date.utc', '1'
+    systemProperty 'ro.kernel.qemu', '0'
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    testLogging {
+        lifecycle {
+            exceptionFormat "full"
+        }
+    }
+
+    workingDir = '../app/src/main'
+}
+
+tasks["test"].dependsOn project(":app").tasks["compileDebugJava"]

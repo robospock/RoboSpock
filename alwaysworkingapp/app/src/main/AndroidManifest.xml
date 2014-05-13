@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest
+    package="org.robospock.android"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="8"/>
+
+    <application
+        android:icon="@android:drawable/ic_delete"
+        android:label="Always working app">
+        <activity
+            android:name=".MainActivity"
+            android:label="Always working app">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
