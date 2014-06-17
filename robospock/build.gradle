@@ -10,8 +10,16 @@ description = 'RoboSpock testing library'
 
 sourceCompatibility = 1.6
 
+def props = new Properties()
+file("../local.properties").withInputStream {
+    stream -> props.load(stream)
+}
+
 repositories {
     mavenCentral()
+    maven {
+        url new File(props['sdk.dir'] + "/extras/android/m2repository/").toURI()
+    }
 }
 
 dependencies {
@@ -20,7 +28,7 @@ dependencies {
 
     // Android part
     //compile "org.roboguice:roboguice:2.0"
-    compile "org.robolectric:robolectric:2.2"
+    compile "org.robolectric:robolectric:2.3"
     compile "com.google.android:android:4.1.1.4"
 
     testCompile project(':antApp')
