@@ -10,15 +10,11 @@ description = 'RoboSpock testing library'
 
 sourceCompatibility = 1.6
 
-def props = new Properties()
-file("../local.properties").withInputStream {
-    stream -> props.load(stream)
-}
-
 repositories {
     mavenCentral()
+    def androidHome = System.getenv("ANDROID_HOME")
     maven {
-        url new File(props['sdk.dir'] + "/extras/android/m2repository/").toURI()
+        url "$androidHome/extras/android/m2repository/"
     }
 }
 
