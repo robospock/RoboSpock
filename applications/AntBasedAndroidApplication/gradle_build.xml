@@ -1,3 +1,0 @@
-<project>
-    <include file="build.xml" as="android"/>
-</project>
