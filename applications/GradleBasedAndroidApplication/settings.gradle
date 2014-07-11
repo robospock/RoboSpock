@@ -1,4 +1,0 @@
-include 'basic', 'robospock'
-
-project(':basic').name = 'gradleApp'
-project(':robospock').name = 'gradleApp-robospock-tests'
