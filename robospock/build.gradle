@@ -12,6 +12,10 @@ sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
+    def androidHome = System.getenv("ANDROID_HOME")
+    maven {
+        url "$androidHome/extras/android/m2repository/"
+    }
 }
 
 dependencies {
@@ -20,7 +24,7 @@ dependencies {
 
     // Android part
     //compile "org.roboguice:roboguice:2.0"
-    compile "org.robolectric:robolectric:2.2"
+    compile "org.robolectric:robolectric:2.3"
     compile "com.google.android:android:4.1.1.4"
 
     testCompile project(':antApp')

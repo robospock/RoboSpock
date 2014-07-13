@@ -8,11 +8,8 @@ import org.robolectric.bytecode.ClassHandler;
 import org.robolectric.bytecode.RobolectricInternals;
 import org.robolectric.bytecode.ShadowMap;
 import org.robolectric.bytecode.ShadowWrangler;
-import org.robolectric.internal.ParallelUniverse;
 import org.robolectric.internal.ParallelUniverseInterface;
 import org.robolectric.res.ResourceLoader;
-import org.robolectric.util.DatabaseConfig;
-import org.robolectric.util.SQLiteMap;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
@@ -30,7 +27,6 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
     private static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
 
     private static ShadowMap mainShadowMap;
-    private DatabaseConfig.DatabaseMap databaseMap = new SQLiteMap();
     private TestLifecycle<Application> testLifecycle;
 
     private SpecInfo specInfo;
@@ -59,7 +55,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
             assureTestLifecycle(sdkEnvironment);
 
             parallelUniverseInterface.resetStaticState();
-            parallelUniverseInterface.setDatabaseMap(databaseMap); //Set static DatabaseMap in DBConfig
+            parallelUniverseInterface.setSdkConfig(sdkEnvironment.getSdkConfig());
 
             boolean strictI18n = determineI18nStrictState();
 
@@ -154,7 +150,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         try {
             @SuppressWarnings("unchecked")
             Class<ParallelUniverseInterface> aClass = (Class<ParallelUniverseInterface>)
-                    sdkEnvironment.getRobolectricClassLoader().loadClass(ParallelUniverse.class.getName());
+                    sdkEnvironment.getRobolectricClassLoader().loadClass(ParallelUniverseCompat.class.getName());
 
             return aClass.newInstance();
         } catch (ClassNotFoundException e) {
@@ -229,15 +225,15 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         synchronized (sdkEnvironment) {
             classHandler = sdkEnvironment.classHandlersByShadowMap.get(shadowMap);
             if (classHandler == null) {
-                classHandler = createClassHandler(shadowMap);
+                classHandler = createClassHandler(shadowMap, sdkEnvironment.getSdkConfig());
             }
             sdkEnvironment.setCurrentClassHandler(classHandler);
         }
         return classHandler;
     }
 
-    protected ClassHandler createClassHandler(ShadowMap shadowMap) {
-        return new ShadowWrangler(shadowMap);
+    protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
+        return new ShadowWrangler(shadowMap, sdkConfig);
     }
 
     private boolean determineI18nStrictState() {

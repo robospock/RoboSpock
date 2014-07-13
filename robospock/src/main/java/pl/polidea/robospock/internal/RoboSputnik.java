@@ -261,7 +261,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     protected ClassLoader createRobolectricClassLoader(Setup setup, SdkConfig sdkConfig) {
         URL[] urls = MAVEN_CENTRAL.getLocalArtifactUrls(
                 null,
-                sdkConfig.getSdkClasspathDependencies()).values().toArray(new URL[0]);
+                sdkConfig.getSdkClasspathDependencies());
 
         return new AsmInstrumentingClassLoader(setup, urls);
     }
@@ -291,17 +291,15 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     }
 
     protected SdkConfig pickSdkVersion(AndroidManifest appManifest, Config config) {
-        if (config != null && config.emulateSdk() != -1) {
-            throw new UnsupportedOperationException("Sorry, emulateSdk is not yet supported... coming soon!");
+        if (config != null && config.emulateSdk() > 0) {
+            return new SdkConfig(config.emulateSdk());
+        } else {
+            if (appManifest != null) {
+                return new SdkConfig(appManifest.getTargetSdkVersion());
+            } else {
+                return SdkConfig.getDefaultSdk();
+            }
         }
-
-        if (appManifest != null) {
-            // todo: something smarter
-            int useSdkVersion = appManifest.getTargetSdkVersion();
-        }
-
-        // right now we only have real jars for Ice Cream Sandwich aka 4.1 aka API 16
-        return new SdkConfig("4.1.2_r1_rc");
     }
 
     public Description getDescription() {
