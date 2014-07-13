@@ -3,7 +3,7 @@ package com.android.tests.basic;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
-import com.android.tests.basic.R;
+import pl.polidea.robospock.R;
 
 public class Main extends Activity
 {

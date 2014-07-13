@@ -10,16 +10,8 @@ description = 'RoboSpock testing library'
 
 sourceCompatibility = 1.6
 
-repositories {
-    mavenCentral()
-    def androidHome = System.getenv("ANDROID_HOME")
-    maven {
-        url "$androidHome/extras/android/m2repository/"
-    }
-}
-
 dependencies {
-    groovy "org.codehaus.groovy:groovy-all:1.8.6"
+    compile "org.codehaus.groovy:groovy-all:1.8.6"
     compile "org.spockframework:spock-core:0.7-groovy-1.8"
 
     // Android part

@@ -6,11 +6,13 @@ buildscript {
         classpath 'com.android.tools.build:gradle:0.12.+'
     }
 }
-apply plugin: 'android'
-apply plugin: 'idea'
+apply plugin: 'com.android.application'
 
 dependencies {
 //    compile 'com.android.support:support-v4:19.1.0'
+    compile 'org.roboguice:roboguice:2.0'
+    compile 'com.j256.ormlite:ormlite-android:4.41'
+
 }
 
 android {
@@ -43,4 +45,10 @@ android {
         }
     }
 
+}
+
+task zip2jar(type: Zip, dependsOn: "compileDebugJava") {
+    from 'build/intermediates/classes/debug'
+    destinationDir = file('build/libs')
+    extension = "jar"
 }

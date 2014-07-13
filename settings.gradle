@@ -4,10 +4,10 @@
 //include 'applications/AntBasedAndroidApplication/test/robospock'
 //project(':applications/AntBasedAndroidApplication/test/robospock').name = 'antApp-robospock-tests'
 
-include 'applications/GradleBasedAndroidApplication/basic'
-project(':applications/GradleBasedAndroidApplication/basic').name = 'gradleApp'
+//include ':applications/GradleBasedAndroidApplication/basic'
+//project(':applications/GradleBasedAndroidApplication/basic').name = 'gradleApp'
+//
+//include ':applications/GradleBasedAndroidApplication/robospock'
+//project(':applications/GradleBasedAndroidApplication/robospock').name = 'gradleApp-robospock-tests'
 
-include 'applications/GradleBasedAndroidApplication/robospock'
-project(':applications/GradleBasedAndroidApplication/robospock').name = 'gradleApp-robospock-tests'
-
-include 'robospock'
+include ':robospock', ':sampleApp', ':sampleTest'
