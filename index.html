@@ -93,8 +93,14 @@ layout: main
     given:
     def textView = new TextView(Robolectric.application)
 
-    expect:
-    textView.text == "Hello"
+		and:
+		def hello = "Hello"
+
+    when:
+    textView.setText(hello)
+
+    then:
+    textView.getText() == hello
 }
                 </code></pre>
             </div>
