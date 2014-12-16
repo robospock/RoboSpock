@@ -11,8 +11,8 @@ description = 'RoboSpock testing library'
 sourceCompatibility = 1.6
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:1.8.6"
-    compile "org.spockframework:spock-core:0.7-groovy-1.8"
+    compile "org.codehaus.groovy:groovy-all:2.3.8"
+    compile "org.spockframework:spock-core:0.7-groovy-2.0"
 
     // Android part
     //compile "org.roboguice:roboguice:2.0"

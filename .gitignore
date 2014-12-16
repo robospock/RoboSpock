@@ -30,3 +30,6 @@ out/
 # Android
 local.properties
 
+# Android Studio 1.0.1
+gen/
+
