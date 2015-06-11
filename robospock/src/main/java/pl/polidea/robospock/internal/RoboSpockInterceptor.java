@@ -9,6 +9,7 @@ import org.robolectric.bytecode.RobolectricInternals;
 import org.robolectric.bytecode.ShadowMap;
 import org.robolectric.bytecode.ShadowWrangler;
 import org.robolectric.internal.ParallelUniverseInterface;
+import org.robolectric.internal.ReflectionHelpers;
 import org.robolectric.res.ResourceLoader;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
@@ -19,8 +20,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.fest.reflect.core.Reflection.staticField;
 
 public class RoboSpockInterceptor extends AbstractMethodInterceptor {
 
@@ -61,7 +60,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
 
             int sdkVersion = pickReportedSdkVersion(config, appManifest);
             Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
-            staticField("SDK_INT").ofType(int.class).in(versionClass).set(sdkVersion);
+            ReflectionHelpers.setStaticFieldReflectively(versionClass, "SDK_INT", sdkVersion);
 
             ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(MAVEN_CENTRAL, null);
             setUpApplicationState(null, parallelUniverseInterface, strictI18n, systemResourceLoader, appManifest, config);
