@@ -66,7 +66,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         try {
             assureTestLifecycle(sdkEnvironment);
 
-            parallelUniverseInterface.resetStaticState();
+            parallelUniverseInterface.resetStaticState(config);
             parallelUniverseInterface.setSdkConfig(sdkEnvironment.getSdkConfig());
 
             boolean strictI18n = determineI18nStrictState();
@@ -90,7 +90,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         try {
             invocation.proceed();
         } finally {
-            parallelUniverseInterface.resetStaticState();
+            parallelUniverseInterface.resetStaticState(config);
         }
 
     }

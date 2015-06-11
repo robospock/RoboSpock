@@ -1,7 +1,6 @@
 package pl.polidea.robospock.internal;
 
 import android.app.Application;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -36,8 +35,8 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
     private SdkConfig sdkConfig;
 
     @Override
-    public void resetStaticState() {
-        Robolectric.reset();
+    public void resetStaticState(Config config) {
+        Robolectric.reset(config);
 
         if (!loggingInitialized) {
             ShadowLog.setupLogging();
@@ -99,7 +98,7 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
                 new ReflectionHelpers.ClassParameter(activityThreadClass, activityThread)
         );
 
-        final Application application = (Application) testLifecycle.createApplication(method, appManifest);
+        final Application application = (Application) testLifecycle.createApplication(method, appManifest, config);
         if (application != null) {
             String packageName = appManifest != null ? appManifest.getPackageName() : null;
             if (packageName == null) packageName = DEFAULT_PACKAGE_NAME;
