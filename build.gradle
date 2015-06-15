@@ -1,5 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-def googleLocalRepo = new File(System.getenv("ANDROID_HOME") + "extras/android/m2repository/").toURI()
+def googleLocalRepo = new File(System.getenv("ANDROID_HOME") + "/extras/android/m2repository/").toURI()
 
 allprojects {
 

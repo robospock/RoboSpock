@@ -18,6 +18,7 @@ import org.robolectric.util.AnnotationUtil;
 import org.spockframework.runtime.Sputnik;
 import org.spockframework.runtime.model.SpecInfo;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -28,8 +29,20 @@ import java.security.SecureRandom;
 import java.util.*;
 
 public class RoboSputnik extends Runner implements Filterable, Sortable {
+    private DependencyResolver dependencyResolver;
 
-    private static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
+    protected DependencyResolver getJarResolver() {
+        if (dependencyResolver == null) {
+            if (Boolean.getBoolean("robolectric.offline")) {
+                String dependencyDir = System.getProperty("robolectric.dependency.dir", ".");
+                dependencyResolver = new LocalDependencyResolver(new File(dependencyDir));
+            } else {
+                dependencyResolver = new MavenDependencyResolver();
+            }
+        }
+
+        return dependencyResolver;
+    }
 
     private static final Map<Class<? extends RoboSputnik>, EnvHolder> envHoldersByTestRunner =
             new HashMap<Class<? extends RoboSputnik>, EnvHolder>();
@@ -259,9 +272,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     }
 
     protected ClassLoader createRobolectricClassLoader(Setup setup, SdkConfig sdkConfig) {
-        URL[] urls = MAVEN_CENTRAL.getLocalArtifactUrls(
-                null,
-                sdkConfig.getSdkClasspathDependencies());
+        URL[] urls = getJarResolver().getLocalArtifactUrls(sdkConfig.getSdkClasspathDependencies());
 
         return new AsmInstrumentingClassLoader(setup, urls);
     }
@@ -272,7 +283,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
             public boolean shouldAcquire(String name) {
 
                 List<String> prefixes = Arrays.asList(
-                        MavenCentral.class.getName(),
+                        DependencyResolver.class.getName(),
                         "org.junit",
                         ShadowMap.class.getName()
                 );

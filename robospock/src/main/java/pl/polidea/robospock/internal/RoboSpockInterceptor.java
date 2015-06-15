@@ -9,22 +9,34 @@ import org.robolectric.bytecode.RobolectricInternals;
 import org.robolectric.bytecode.ShadowMap;
 import org.robolectric.bytecode.ShadowWrangler;
 import org.robolectric.internal.ParallelUniverseInterface;
+import org.robolectric.internal.ReflectionHelpers;
 import org.robolectric.res.ResourceLoader;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.fest.reflect.core.Reflection.staticField;
-
 public class RoboSpockInterceptor extends AbstractMethodInterceptor {
+    private DependencyResolver dependencyResolver;
 
-    private static final MavenCentral MAVEN_CENTRAL = new MavenCentral();
+    protected DependencyResolver getJarResolver() {
+        if (dependencyResolver == null) {
+            if (Boolean.getBoolean("robolectric.offline")) {
+                String dependencyDir = System.getProperty("robolectric.dependency.dir", ".");
+                dependencyResolver = new LocalDependencyResolver(new File(dependencyDir));
+            } else {
+                dependencyResolver = new MavenDependencyResolver();
+            }
+        }
+
+        return dependencyResolver;
+    }
 
     private static ShadowMap mainShadowMap;
     private TestLifecycle<Application> testLifecycle;
@@ -54,16 +66,16 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         try {
             assureTestLifecycle(sdkEnvironment);
 
-            parallelUniverseInterface.resetStaticState();
+            parallelUniverseInterface.resetStaticState(config);
             parallelUniverseInterface.setSdkConfig(sdkEnvironment.getSdkConfig());
 
             boolean strictI18n = determineI18nStrictState();
 
             int sdkVersion = pickReportedSdkVersion(config, appManifest);
             Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
-            staticField("SDK_INT").ofType(int.class).in(versionClass).set(sdkVersion);
+            ReflectionHelpers.setStaticFieldReflectively(versionClass, "SDK_INT", sdkVersion);
 
-            ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(MAVEN_CENTRAL, null);
+            ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(getJarResolver(), null);
             setUpApplicationState(null, parallelUniverseInterface, strictI18n, systemResourceLoader, appManifest, config);
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,7 +90,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         try {
             invocation.proceed();
         } finally {
-            parallelUniverseInterface.resetStaticState();
+            parallelUniverseInterface.resetStaticState(config);
         }
 
     }
