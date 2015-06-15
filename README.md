@@ -12,6 +12,8 @@ Setup
 
 Changelog
 =========
+0.6.0 - Robolectric updated to 2.4
+
 0.5.0 - Robolectric updated to 2.3
 
 0.4.4 - Robolectric updated to 2.2 and Spock to 0.7
