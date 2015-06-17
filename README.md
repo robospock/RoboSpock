@@ -12,7 +12,7 @@ Setup
 
 Changelog
 =========
-0.6.0 - Robolectric updated to 2.4
+0.6.0-rc - Robolectric updated to 2.4
 
 0.5.0 - Robolectric updated to 2.3
 
