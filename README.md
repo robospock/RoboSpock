@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/robospock/RoboSpock.svg?branch=master)](https://travis-ci.org/robospock/RoboSpock)
+
 RoboSpock
 =========
 
