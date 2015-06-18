@@ -1,3 +1,9 @@
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 apply {
     plugin 'groovy'
     plugin 'signing'
@@ -15,12 +21,10 @@ dependencies {
     compile "org.spockframework:spock-core:0.7-groovy-2.0"
 
     // Android part
-    //compile "org.roboguice:roboguice:2.0"
     compile "org.robolectric:robolectric:2.4"
     compile "com.google.android:android:4.1.1.4"
     compile "com.android.support:support-v4:19.0.1"
 
-    //testCompile project(':antApp')
 }
 
 test {
