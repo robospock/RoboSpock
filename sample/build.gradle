@@ -1,0 +1,57 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
+        classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
+    }
+}
+
+apply plugin: 'android-sdk-manager'
+
+apply plugin: 'com.android.application'
+apply plugin: 'groovyx.grooid.groovy-android'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "org.robospock.sampleapp"
+
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'org.roboguice:roboguice:2.0'
+    compile 'com.j256.ormlite:ormlite-android:4.41'
+
+    testCompile 'org.robospock:robospock:0.6.0-rc'
+
+    // robolectric requires is it to run
+    // if you're not using it in your code just leave it as a testCompile depedency
+    testCompile 'com.android.support:support-v4:19.0.1'
+
+    testCompile 'org.mockito:mockito-all:1.9.5'
+
+}
+
+task zip2jar(type: Zip, dependsOn: "compileReleaseJava") {
+    from 'build/intermediates/classes/release'
+    destinationDir = file('build/libs')
+    extension = "jar"
+}
