@@ -27,14 +27,6 @@ dependencies {
 
 }
 
-test {
-    //workingDir project(':antApp').file('.')
-}
-
-clean {
-    delete 'tmp'
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }
