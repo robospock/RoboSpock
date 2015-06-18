@@ -15,7 +15,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'groovyx.grooid.groovy-android'
 
 repositories {
-        jcenter()
+    mavenCentral()
+    jcenter()
 }
 
 android {
