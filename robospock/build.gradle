@@ -27,10 +27,6 @@ dependencies {
 
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.10'
-}
-
 /*
  *
  * It's all about OSS Sonatype from now to the bottom
