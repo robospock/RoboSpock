@@ -131,6 +131,25 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
         }
     }
 
+    @Override
+    public void tearDownApplication() {
+        if (Robolectric.application != null) {
+            Robolectric.application.onTerminate();
+        }
+    }
+
+    @Override
+    public Object getCurrentApplication() {
+        return Robolectric.application;
+    }
+
+    @Override
+    public void setSdkConfig(SdkConfig sdkConfig) {
+        this.sdkConfig = sdkConfig;
+    }
+
+    // Robospock specific code goes here
+
     public final ResourceLoader getAppResourceLoader(SdkConfig sdkConfig, ResourceLoader systemResourceLoader, final AndroidManifest appManifest) {
         Pair<AndroidManifest, SdkConfig> androidManifestSdkConfigPair = new Pair<AndroidManifest, SdkConfig>(appManifest, sdkConfig);
         ResourceLoader resourceLoader = resourceLoadersByManifestAndConfig.get(androidManifestSdkConfigPair);
@@ -156,20 +175,5 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
 
     public PackageResourceLoader createResourceLoader(ResourcePath resourcePath) {
         return new PackageResourceLoader(resourcePath);
-    }
-
-    @Override public void tearDownApplication() {
-        if (Robolectric.application != null) {
-            Robolectric.application.onTerminate();
-        }
-    }
-
-    @Override public Object getCurrentApplication() {
-        return Robolectric.application;
-    }
-
-    @Override
-    public void setSdkConfig(SdkConfig sdkConfig) {
-        this.sdkConfig = sdkConfig;
     }
 }
