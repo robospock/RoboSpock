@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.robolectric.Robolectric.shadowOf;
+import static org.robolectric.internal.ReflectionHelpers.ClassParameter;
 
 public class ParallelUniverseCompat implements ParallelUniverseInterface {
 
@@ -59,7 +60,8 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
         return qualifiers;
     }
 
-    @Override public void setUpApplicationState(Method method, TestLifecycle testLifecycle, boolean strictI18n, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
+    @Override
+    public void setUpApplicationState(Method method, TestLifecycle testLifecycle, boolean strictI18n, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
         Robolectric.application = null;
         Robolectric.packageManager = new RobolectricPackageManager();
         Robolectric.packageManager.addPackage(DEFAULT_PACKAGE_NAME);
@@ -79,25 +81,16 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
         systemResources.updateConfiguration(configuration, systemResources.getDisplayMetrics());
         shadowOf(systemResources.getAssets()).setQualifiers(qualifiers);
 
-        Class<?> contextImplClass = ReflectionHelpers.loadClassReflectively(
-                getClass().getClassLoader(), ShadowContextImpl.CLASS_NAME
-        );
+        Class<?> contextImplClass = ReflectionHelpers.loadClassReflectively(getClass().getClassLoader(), ShadowContextImpl.CLASS_NAME);
 
-        Class<?> activityThreadClass = ReflectionHelpers.loadClassReflectively(
-                getClass().getClassLoader(), ShadowActivityThread.CLASS_NAME
-        );
-
+        Class<?> activityThreadClass = ReflectionHelpers.loadClassReflectively(getClass().getClassLoader(), ShadowActivityThread.CLASS_NAME);
         Object activityThread = ReflectionHelpers.callConstructorReflectively(activityThreadClass);
         Robolectric.activityThread = activityThread;
 
         ReflectionHelpers.setFieldReflectively(activityThread, "mInstrumentation", new RoboInstrumentation());
-
         ReflectionHelpers.setFieldReflectively(activityThread, "mCompatConfiguration", configuration);
 
-        Context systemContextImpl = ReflectionHelpers.callStaticMethodReflectively(
-                contextImplClass, "createSystemContext",
-                new ReflectionHelpers.ClassParameter(activityThreadClass, activityThread)
-        );
+        Context systemContextImpl = ReflectionHelpers.callStaticMethodReflectively(contextImplClass, "createSystemContext", new ReflectionHelpers.ClassParameter(activityThreadClass, activityThread));
 
         final Application application = (Application) testLifecycle.createApplication(method, appManifest, config);
         if (application != null) {
@@ -111,17 +104,11 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
                 throw new RuntimeException(e);
             }
 
-            Class<?> compatibilityInfoClass = ReflectionHelpers.loadClassReflectively(
-                    getClass().getClassLoader(), "android.content.res.CompatibilityInfo"
-            );
+            Class<?> compatibilityInfoClass = ReflectionHelpers.loadClassReflectively(getClass().getClassLoader(), "android.content.res.CompatibilityInfo");
 
-            Object loadedApk = ReflectionHelpers.callInstanceMethodReflectively(
-                    activityThread, "getPackageInfo",
-                    new ReflectionHelpers.ClassParameter(ApplicationInfo.class, applicationInfo),
-                    new ReflectionHelpers.ClassParameter(compatibilityInfoClass, null),
-                    new ReflectionHelpers.ClassParameter(ClassLoader.class, getClass().getClassLoader()),
-                    new ReflectionHelpers.ClassParameter(boolean.class, false),
-                    new ReflectionHelpers.ClassParameter(boolean.class, true)
+            Object loadedApk = ReflectionHelpers.callInstanceMethodReflectively(activityThread, "getPackageInfo", new ClassParameter(ApplicationInfo.class, applicationInfo),
+                    new ClassParameter(compatibilityInfoClass, null), new ClassParameter(ClassLoader.class, getClass().getClassLoader()), new ClassParameter(boolean.class, false),
+                    new ClassParameter(boolean.class, true)
             );
 
             shadowOf(application).bind(appManifest, resourceLoader);
@@ -131,19 +118,9 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
             }
             Resources appResources = application.getResources();
             ReflectionHelpers.setFieldReflectively(loadedApk, "mResources", appResources);
-
-            Context contextImpl = ReflectionHelpers.callInstanceMethodReflectively(
-                    systemContextImpl, "createPackageContext",
-                    new ReflectionHelpers.ClassParameter(String.class, applicationInfo.packageName),
-                    new ReflectionHelpers.ClassParameter(int.class, Context.CONTEXT_INCLUDE_CODE)
-            );
-
+            Context contextImpl = ReflectionHelpers.callInstanceMethodReflectively(systemContextImpl, "createPackageContext", new ClassParameter(String.class, applicationInfo.packageName), new ClassParameter(int.class, Context.CONTEXT_INCLUDE_CODE));
             ReflectionHelpers.setFieldReflectively(activityThread, "mInitialApplication", application);
-
-            ReflectionHelpers.callInstanceMethodReflectively(
-                    application, "attach",
-                    new ReflectionHelpers.ClassParameter(Context.class, contextImpl)
-            );
+            ReflectionHelpers.callInstanceMethodReflectively(application, "attach", new ClassParameter(Context.class, contextImpl));
 
             appResources.updateConfiguration(configuration, appResources.getDisplayMetrics());
             shadowOf(appResources.getAssets()).setQualifiers(qualifiers);
