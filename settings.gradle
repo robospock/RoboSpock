@@ -1,1 +1,2 @@
 include ':robospock'
+include ':sample'

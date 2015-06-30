@@ -114,3 +114,14 @@ uploadArchives {
     }
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        //, "standardOut", "standardError"
+
+        lifecycle {
+            exceptionFormat "full"
+        }
+    }
+}
+
