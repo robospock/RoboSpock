@@ -30,11 +30,11 @@ Testing from Android Studio
 ----------------------
 Our IDE supports running unit tests only when **Test Artifact** is set to "Unit Tests".
 
-![Unit tests](/rsz_1tests.png)
+![Unit tests](./rsz_1tests.png)
 
 When set just use context menu over **groovy** directory and choose "Run all tests"
 
-![Run tests](/rsz_1run.png)
+![Run tests](./rsz_1run.png)
 
 
 Tested under versions:
