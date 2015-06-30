@@ -124,68 +124,38 @@ layout: main
                     We've done our best to show you how to integrate your whole environment
                     for both Ant and Gradle (New Build System).
                 </p>
-                <h3>Gradle</h3>
-                <p>
-                    Checkout the sample build.gradle file on the right. 
-                    It's not only a library but also there's <a href="https://github.com/pjakubczyk/robospock-plugin">gradle plugin</a> which does all the work for you.
-                </p>
-                
-                <h3>Ant</h3>
-                    <p>
-                    Still on Ant, huh? 
-                    If you'd like to have this support please create issue at <a href="https://github.com/Polidea/RoboSpock/issues">github</a>.
-                    </p>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <pre><code class="prettyprint">buildscript {
-  repositories {
-    mavenLocal()
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:0.8.+'
-    classpath 'org.robospock:robospock-plugin:0.4.0'
-  }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
+    }
 }
+
+apply plugin: 'com.android.application'
+apply plugin: 'groovyx.grooid.groovy-android'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
+    jcenter()
 }
-
-apply plugin: 'groovy'
 
 dependencies {
-  compile "org.codehaus.groovy:groovy-all:1.8.6"
-  compile 'org.robospock:robospock:0.4.4'
+    testCompile 'org.robospock:robospock:0.6.0-rc'
+
+    // robolectric requires is it to run
+    // if you're not using it in your code just leave it as a testCompile depedency
+    testCompile 'com.android.support:support-v4:19.0.1'
 }
-
-
-project.ext {
-    robospock = ":android-sample" // project to test
-}
-
-apply plugin: 'robospock'
-
 </code></pre>
             </div>
         </div>
     </div>
 </div>
-
-
-<!--<div class="container">-->
-
-    <!--<div class="row well">-->
-        <!--<div class="col-lg-8 col-md-8">-->
-            <!--<h4>'Modern Business' is a ready-to-use, Bootstrap 3 updated, multi-purpose HTML theme!</h4>-->
-            <!--<p>For more templates and more page options that you can integrate into this website template, visit Start Bootstrap!</p>-->
-        <!--</div>-->
-        <!--<div class="col-lg-4 col-md-4">-->
-            <!--<a class="btn btn-lg btn-primary pull-right" href="http://startbootstrap.com">See More Templates!</a>-->
-        <!--</div>-->
-    <!--</div>&lt;!&ndash; /.row &ndash;&gt;-->
-
-<!--</div>&lt;!&ndash; /.container &ndash;&gt;-->
 
 <div class="section">
 
