@@ -1,5 +1,6 @@
 # All directories should end in / (information used by ide.gradle)
 tmp/
+.DS_Store
 
 # Ant
 ant/
