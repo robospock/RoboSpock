@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import org.robolectric.*;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.internal.ParallelUniverseInterface;
 import org.robolectric.internal.ReflectionHelpers;
@@ -68,9 +69,9 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
 
     @Override
     public void setUpApplicationState(Method method, TestLifecycle testLifecycle, boolean strictI18n, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
-        Robolectric.application = null;
         Robolectric.packageManager = new RobolectricPackageManager();
         Robolectric.packageManager.addPackage(DEFAULT_PACKAGE_NAME);
+        RuntimeEnvironment.application = null;
         ResourceLoader resourceLoader;
         if (appManifest != null) {
             // robolectric
@@ -134,21 +135,21 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
             shadowOf(appResources.getAssets()).setQualifiers(qualifiers);
             shadowOf(application).setStrictI18n(strictI18n);
 
-            Robolectric.application = application;
+            RuntimeEnvironment.application = application;
             application.onCreate();
         }
     }
 
     @Override
     public void tearDownApplication() {
-        if (Robolectric.application != null) {
-            Robolectric.application.onTerminate();
+        if (RuntimeEnvironment.application != null) {
+            RuntimeEnvironment.application.onTerminate();
         }
     }
 
     @Override
     public Object getCurrentApplication() {
-        return Robolectric.application;
+        return RuntimeEnvironment.application;
     }
 
     @Override
