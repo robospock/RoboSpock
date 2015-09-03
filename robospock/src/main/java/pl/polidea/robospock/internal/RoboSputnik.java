@@ -64,10 +64,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return dependencyResolver;
     }
 
-    private static Class<? extends RoboSputnik> lastTestRunnerClass;
-    private static SdkConfig lastSdkConfig;
-    private static SdkEnvironment lastSdkEnvironment;
-
     private Object sputnik;
 
     static {
