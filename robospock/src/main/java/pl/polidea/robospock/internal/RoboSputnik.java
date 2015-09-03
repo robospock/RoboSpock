@@ -206,38 +206,40 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
 //    protected HelperTestRunner getHelperTestRunner(Class bootstrappedTestClass) {
 
-    protected AndroidManifest getAppManifest(Config config) {
-        if (config.manifest().equals(Config.NONE)) {
-            return null;
-        }
 
-        boolean propertyAvailable = false;
-        FsFile manifestFile = null;
-        String manifestProperty = System.getProperty("android.manifest");
-        if (config.manifest().equals(Config.DEFAULT) && manifestProperty != null) {
-            manifestFile = Fs.fileFromPath(manifestProperty);
-            propertyAvailable = true;
-        } else {
-            FsFile fsFile = Fs.currentDirectory();
-            String manifestStr = config.manifest().equals(Config.DEFAULT) ? "AndroidManifest.xml" : config.manifest();
-            manifestFile = fsFile.join(manifestStr);
-        }
 
-        synchronized (envHolder) {
-            AndroidManifest appManifest;
-            appManifest = envHolder.appManifestsByFile.get(manifestFile);
-            if (appManifest == null) {
-
-                long startTime = System.currentTimeMillis();
-                appManifest = propertyAvailable ? createAppManifestFromProperty(manifestFile) : createAppManifest(manifestFile);
-                if (DocumentLoader.DEBUG_PERF)
-                    System.out.println(String.format("%4dms spent in %s", System.currentTimeMillis() - startTime, manifestFile));
-
-                envHolder.appManifestsByFile.put(manifestFile, appManifest);
-            }
-            return appManifest;
-        }
-    }
+//    protected AndroidManifest getAppManifest(Config config) {
+//        if (config.manifest().equals(Config.NONE)) {
+//            return null;
+//        }
+//
+//        boolean propertyAvailable = false;
+//        FsFile manifestFile = null;
+//        String manifestProperty = System.getProperty("android.manifest");
+//        if (config.manifest().equals(Config.DEFAULT) && manifestProperty != null) {
+//            manifestFile = Fs.fileFromPath(manifestProperty);
+//            propertyAvailable = true;
+//        } else {
+//            FsFile fsFile = Fs.currentDirectory();
+//            String manifestStr = config.manifest().equals(Config.DEFAULT) ? "AndroidManifest.xml" : config.manifest();
+//            manifestFile = fsFile.join(manifestStr);
+//        }
+//
+//        synchronized (envHolder) {
+//            AndroidManifest appManifest;
+//            appManifest = envHolder.appManifestsByFile.get(manifestFile);
+//            if (appManifest == null) {
+//
+//                long startTime = System.currentTimeMillis();
+//                appManifest = propertyAvailable ? createAppManifestFromProperty(manifestFile) : createAppManifest(manifestFile);
+//                if (DocumentLoader.DEBUG_PERF)
+//                    System.out.println(String.format("%4dms spent in %s", System.currentTimeMillis() - startTime, manifestFile));
+//
+//                envHolder.appManifestsByFile.put(manifestFile, appManifest);
+//            }
+//            return appManifest;
+//        }
+//    }
 
     protected AndroidManifest createAppManifest(FsFile manifestFile) {
         if (!manifestFile.exists()) {
@@ -255,21 +257,22 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return Fs.currentDirectory();
     }
 
-    protected AndroidManifest createAppManifestFromProperty(FsFile manifestFile) {
-        String resProperty = System.getProperty("android.resources");
-        String assetsProperty = System.getProperty("android.assets");
-        AndroidManifest manifest = new AndroidManifest(manifestFile, Fs.fileFromPath(resProperty), Fs.fileFromPath(assetsProperty));
-        String packageProperty = System.getProperty("android.package");
+//    protected AndroidManifest createAppManifestFromProperty(FsFile manifestFile) {
+//        String resProperty = System.getProperty("android.resources");
+//        String assetsProperty = System.getProperty("android.assets");
+//        AndroidManifest manifest = new AndroidManifest(manifestFile, Fs.fileFromPath(resProperty), Fs.fileFromPath(assetsProperty));
+//        String packageProperty = System.getProperty("android.package");
+//
+//        if (packageProperty != null) {
+//            try {
+//                setPackageName(manifest, packageProperty);
+//            } catch (IllegalArgumentException e) {
+//                System.out.println("WARNING: Faild to set package name for " + manifestFile.getPath() + ".");
+//            }
+//        }
+//        return manifest;
+//    }
 
-        if (packageProperty != null) {
-            try {
-                setPackageName(manifest, packageProperty);
-            } catch (IllegalArgumentException e) {
-                System.out.println("WARNING: Faild to set package name for " + manifestFile.getPath() + ".");
-            }
-        }
-        return manifest;
-    }
 
     protected Properties getConfigProperties() {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -297,55 +300,54 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         injectClassHandler(sdkEnvironment.getRobolectricClassLoader(), classHandler);
     }
 
-    private void setPackageName(AndroidManifest manifest, String packageName) {
-        Class<AndroidManifest> type = AndroidManifest.class;
-        try {
-            Method setPackageNameMethod = type.getMethod("setPackageName", String.class);
-            setPackageNameMethod.setAccessible(true);
-            setPackageNameMethod.invoke(manifest, packageName);
-            return;
-        } catch (NoSuchMethodException e) {
-            try {
+//    private void setPackageName(AndroidManifest manifest, String packageName) {
+//        Class<AndroidManifest> type = AndroidManifest.class;
+//        try {
+//            Method setPackageNameMethod = type.getMethod("setPackageName", String.class);
+//            setPackageNameMethod.setAccessible(true);
+//            setPackageNameMethod.invoke(manifest, packageName);
+//            return;
+//        } catch (NoSuchMethodException e) {
+//            try {
+//
+//                //Force execute parseAndroidManifest.
+//                manifest.getPackageName();
+//
+//                Field packageNameField = type.getDeclaredField("packageName");
+//                packageNameField.setAccessible(true);
+//                packageNameField.set(manifest, packageName);
+//                return;
+//            } catch (Exception fieldError) {
+//                throw new IllegalArgumentException(fieldError);
+//            }
+//        } catch (Exception methodError) {
+//            throw new IllegalArgumentException(methodError);
+//        }
+//    }
 
-                //Force execute parseAndroidManifest.
-                manifest.getPackageName();
-
-                Field packageNameField = type.getDeclaredField("packageName");
-                packageNameField.setAccessible(true);
-                packageNameField.set(manifest, packageName);
-                return;
-            } catch (Exception fieldError) {
-                throw new IllegalArgumentException(fieldError);
-            }
-        } catch (Exception methodError) {
-            throw new IllegalArgumentException(methodError);
-        }
-    }
-
-
-    public Setup createSetup() {
-        return new Setup() {
-            @Override
-            public boolean shouldAcquire(String name) {
-
-                List<String> prefixes = Arrays.asList(
-                        DependencyResolver.class.getName(),
-                        "org.junit",
-                        ShadowMap.class.getName()
-                );
-
-                if(name != null) {
-                    for(String prefix : prefixes) {
-                        if (name.startsWith(prefix)) {
-                            return false;
-                        }
-                    }
-                }
-
-                return super.shouldAcquire(name);
-            }
-        };
-    }
+//    public Setup createSetup() {
+//        return new Setup() {
+//            @Override
+//            public boolean shouldAcquire(String name) {
+//
+//                List<String> prefixes = Arrays.asList(
+//                        DependencyResolver.class.getName(),
+//                        "org.junit",
+//                        ShadowMap.class.getName()
+//                );
+//
+//                if(name != null) {
+//                    for(String prefix : prefixes) {
+//                        if (name.startsWith(prefix)) {
+//                            return false;
+//                        }
+//                    }
+//                }
+//
+//                return super.shouldAcquire(name);
+//            }
+//        };
+//    }
 
     private ClassHandler getClassHandler(SdkEnvironment sdkEnvironment, ShadowMap shadowMap) {
         ClassHandler classHandler;
@@ -466,5 +468,71 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
                                 return method.getDefaultValue();
                             }
                         }));
+    }
+
+    protected AndroidManifest getAppManifest(Config config) {
+        if (config.manifest().equals(Config.NONE)) {
+            return null;
+        }
+
+        String manifestProperty = System.getProperty("android.manifest");
+        String resourcesProperty = System.getProperty("android.resources");
+        String assetsProperty = System.getProperty("android.assets");
+        String packageName = System.getProperty("android.package");
+
+        FsFile baseDir;
+        FsFile manifestFile;
+        FsFile resDir;
+        FsFile assetDir;
+
+        boolean defaultManifest = config.manifest().equals(Config.DEFAULT);
+        if (defaultManifest && manifestProperty != null) {
+            manifestFile = Fs.fileFromPath(manifestProperty);
+            baseDir = manifestFile.getParent();
+        } else {
+            manifestFile = getBaseDir().join(defaultManifest ? AndroidManifest.DEFAULT_MANIFEST_NAME : config.manifest());
+            baseDir = manifestFile.getParent();
+        }
+
+        boolean defaultRes = Config.DEFAULT_RES_FOLDER.equals(config.resourceDir());
+        if (defaultRes && resourcesProperty != null) {
+            resDir = Fs.fileFromPath(resourcesProperty);
+        } else {
+            resDir = baseDir.join(config.resourceDir());
+        }
+
+        boolean defaultAssets = Config.DEFAULT_ASSET_FOLDER.equals(config.assetDir());
+        if (defaultAssets && assetsProperty != null) {
+            assetDir = Fs.fileFromPath(assetsProperty);
+        } else {
+            assetDir = baseDir.join(config.assetDir());
+        }
+
+        String configPackageName = config.packageName();
+        if (configPackageName != null && !configPackageName.isEmpty()) {
+            packageName = configPackageName;
+        }
+
+        List<FsFile> libraryDirs = null;
+        if (config.libraries().length > 0) {
+            libraryDirs = new ArrayList<>();
+            for (String libraryDirName : config.libraries()) {
+                libraryDirs.add(baseDir.join(libraryDirName));
+            }
+        }
+
+        ManifestIdentifier identifier = new ManifestIdentifier(manifestFile, resDir, assetDir, packageName, libraryDirs);
+        synchronized (appManifestsByFile) {
+            AndroidManifest appManifest;
+            appManifest = appManifestsByFile.get(identifier);
+            if (appManifest == null) {
+                appManifest = createAppManifest(manifestFile, resDir, assetDir, packageName);
+                if (libraryDirs != null) {
+                    appManifest.setLibraryDirectories(libraryDirs);
+                }
+                appManifestsByFile.put(identifier, appManifest);
+            }
+            return appManifest;
+        }
     }
 }
