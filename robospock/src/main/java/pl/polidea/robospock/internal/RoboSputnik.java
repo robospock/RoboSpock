@@ -314,15 +314,15 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         };
     }
 
-    protected SdkConfig pickSdkVersion(AndroidManifest appManifest, Config config) {
-        if (config != null && config.emulateSdk() > 0) {
-            return new SdkConfig(config.emulateSdk());
+    protected int pickSdkVersion(Config config, AndroidManifest manifest) {
+        if (config != null && config.sdk().length > 1) {
+            throw new IllegalArgumentException("Robospock does not support multiple values for @Config.sdk");
+        } else if (config != null && config.sdk().length == 1) {
+            return config.sdk()[0];
+        } else if (manifest != null) {
+            return manifest.getTargetSdkVersion();
         } else {
-            if (appManifest != null) {
-                return new SdkConfig(appManifest.getTargetSdkVersion());
-            } else {
-                return SdkConfig.getDefaultSdk();
-            }
+            return SdkConfig.FALLBACK_SDK_VERSION;
         }
     }
 

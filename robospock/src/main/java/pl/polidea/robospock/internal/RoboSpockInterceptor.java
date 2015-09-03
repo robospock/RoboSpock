@@ -82,7 +82,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
             parallelUniverseInterface.resetStaticState(config);
             parallelUniverseInterface.setSdkConfig(sdkEnvironment.getSdkConfig());
 
-            int sdkVersion = pickReportedSdkVersion(config, appManifest);
+            int sdkVersion = pickSdkVersion(config, appManifest);
             Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
             ReflectionHelpers.setStaticField(versionClass, "SDK_INT", sdkVersion);
 
@@ -152,22 +152,16 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         parallelUniverseInterface.setUpApplicationState(method, testLifecycle, systemResourceLoader, appManifest, config);
     }
 
-    protected int pickReportedSdkVersion(Config config, AndroidManifest appManifest) {
-        if (config != null && config.reportSdk() != -1) {
-            return config.reportSdk();
+    protected int pickSdkVersion(Config config, AndroidManifest manifest) {
+        if (config != null && config.sdk().length > 1) {
+            throw new IllegalArgumentException("RoboSpock does not support multiple values for @Config.sdk");
+        } else if (config != null && config.sdk().length == 1) {
+            return config.sdk()[0];
+        } else if (manifest != null) {
+            return manifest.getTargetSdkVersion();
         } else {
-            return getTargetSdkVersion(appManifest);
+            return SdkConfig.FALLBACK_SDK_VERSION;
         }
-    }
-
-    private int getTargetSdkVersion(AndroidManifest appManifest) {
-        return getTargetVersionWhenAppManifestMightBeNullWhaaa(appManifest);
-    }
-
-    public static int getTargetVersionWhenAppManifestMightBeNullWhaaa(AndroidManifest appManifest) {
-        return appManifest == null // app manifest would be null for libraries
-                ? Build.VERSION_CODES.ICE_CREAM_SANDWICH // todo: how should we be picking this?
-                : appManifest.getTargetSdkVersion();
     }
 
     private ParallelUniverseInterface getHooksInterface(SdkEnvironment sdkEnvironment) {
