@@ -163,6 +163,32 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return properties;
     }
 
+//    public RobolectricTestRunner(final Class<?> testClass) throws InitializationError {
+
+//    @SuppressWarnings("unchecked")
+//    private void assureTestLifecycle(SdkEnvironment sdkEnvironment) {
+
+//    protected DependencyResolver getJarResolver() {
+
+    protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
+        return new ShadowWrangler(shadowMap);
+    }
+
+    protected AndroidManifest createAppManifest(FsFile manifestFile, FsFile resDir, FsFile assetDir, String packageName) {
+        if (!manifestFile.exists()) {
+            System.out.print("WARNING: No manifest file found at " + manifestFile.getPath() + ".");
+            System.out.println("Falling back to the Android OS resources only.");
+            System.out.println("To remove this warning, annotate your test class with @Config(manifest=Config.NONE).");
+            return null;
+        }
+
+        Logger.debug("Robolectric assets directory: " + assetDir.getPath());
+        Logger.debug("   Robolectric res directory: " + resDir.getPath());
+        Logger.debug("   Robolectric manifest path: " + manifestFile.getPath());
+        Logger.debug("    Robolectric package name: " + packageName);
+        return new AndroidManifest(manifestFile, resDir, assetDir, packageName);
+    }
+
 //    protected Class<? extends TestLifecycle> getTestLifecycleClass() {
 
     public static void injectClassHandler(ClassLoader robolectricClassLoader, ClassHandler classHandler) {
@@ -230,6 +256,10 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
         FsFile appBaseDir = manifestFile.getParent();
         return new AndroidManifest(manifestFile, appBaseDir.join("res"), appBaseDir.join("assets"));
+    }
+
+    protected FsFile getBaseDir() {
+        return Fs.currentDirectory();
     }
 
     protected AndroidManifest createAppManifestFromProperty(FsFile manifestFile) {
