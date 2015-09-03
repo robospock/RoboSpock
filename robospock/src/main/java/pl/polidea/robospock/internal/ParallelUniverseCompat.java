@@ -13,6 +13,7 @@ import org.robolectric.internal.ParallelUniverseInterface;
 import org.robolectric.internal.ReflectionHelpers;
 import org.robolectric.res.*;
 import org.robolectric.res.builder.RobolectricPackageManager;
+import org.robolectric.res.ResBundle;
 import org.robolectric.shadows.ShadowActivityThread;
 import org.robolectric.shadows.ShadowContextImpl;
 import org.robolectric.shadows.ShadowLog;
@@ -44,7 +45,7 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
 
     @Override
     public void resetStaticState(Config config) {
-        Robolectric.reset(config);
+        Robolectric.reset();
 
         if (!loggingInitialized) {
             ShadowLog.setupLogging();
@@ -57,7 +58,7 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
      * qualifier for the target api level (which comes from the manifest or Config.emulateSdk()).
      */
     private String addVersionQualifierToQualifiers(String qualifiers) {
-        int versionQualifierApiLevel = ResBunch.getVersionQualifierApiLevel(qualifiers);
+        int versionQualifierApiLevel = ResBundle.getVersionQualifierApiLevel(qualifiers);
         if (versionQualifierApiLevel == -1) {
             if (qualifiers.length() > 0) {
                 qualifiers += "-";
