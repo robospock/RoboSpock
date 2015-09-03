@@ -275,6 +275,8 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         };
     }
 
+//    protected void setUpApplicationState(Method method, ParallelUniverseInterface parallelUniverseInterface, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
+
     protected int pickSdkVersion(Config config, AndroidManifest manifest) {
         if (config != null && config.sdk().length > 1) {
             throw new IllegalArgumentException("Robospock does not support multiple values for @Config.sdk");
@@ -303,6 +305,74 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         ((Sortable) sputnik).sort(sorter);
     }
 
+//    private ParallelUniverseInterface getHooksInterface(SdkEnvironment sdkEnvironment) {
+
+//    public void internalAfterTest(final Method method) {
+
+//    private void afterClass() {
+
+//    @TestOnly
+//    boolean allStateIsCleared() {
+
+//    @Override
+//    public Object createTest() throws Exception {
+
+//    public final ResourceLoader getAppResourceLoader(SdkConfig sdkConfig, ResourceLoader systemResourceLoader, final AndroidManifest appManifest) {
+
+//    protected ResourceLoader createAppResourceLoader(ResourceLoader systemResourceLoader, AndroidManifest appManifest) {
+
+//    public PackageResourceLoader createResourceLoader(ResourcePath resourcePath) {
+
+    protected ShadowMap createShadowMap() {
+        synchronized (RoboSputnik.class) {
+            if (mainShadowMap != null) return mainShadowMap;
+            mainShadowMap = new ShadowMap.Builder().build();
+            return mainShadowMap;
+        }
+    }
+
+//    public class HelperTestRunner extends BlockJUnit4ClassRunner {
+
+    private static class ManifestIdentifier {
+        private final FsFile manifestFile;
+        private final FsFile resDir;
+        private final FsFile assetDir;
+        private final String packageName;
+        private final List<FsFile> libraryDirs;
+
+        public ManifestIdentifier(FsFile manifestFile, FsFile resDir, FsFile assetDir, String packageName,
+                                  List<FsFile> libraryDirs) {
+            this.manifestFile = manifestFile;
+            this.resDir = resDir;
+            this.assetDir = assetDir;
+            this.packageName = packageName;
+            this.libraryDirs = libraryDirs != null ? libraryDirs : Collections.<FsFile>emptyList();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ManifestIdentifier that = (ManifestIdentifier) o;
+
+            return assetDir.equals(that.assetDir)
+                    && libraryDirs.equals(that.libraryDirs)
+                    && manifestFile.equals(that.manifestFile)
+                    && resDir.equals(that.resDir)
+                    && ((packageName == null && that.packageName == null) || (packageName != null && packageName.equals(that.packageName)));
+        }
+
+        @Override
+        public int hashCode() {
+            int result = manifestFile.hashCode();
+            result = 31 * result + resDir.hashCode();
+            result = 31 * result + assetDir.hashCode();
+            result = 31 * result + (packageName == null ? 0 : packageName.hashCode());
+            result = 31 * result + libraryDirs.hashCode();
+            return result;
+        }
+    }
 
     private static <A extends Annotation> A defaultsFor(Class<A> annotation) {
         return annotation.cast(
