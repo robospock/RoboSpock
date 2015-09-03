@@ -1,5 +1,6 @@
 package pl.polidea.robospock.internal;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.*;
@@ -18,7 +19,6 @@ import org.robolectric.internal.dependency.MavenDependencyResolver;
 import org.robolectric.res.Fs;
 import org.robolectric.res.FsFile;
 import org.robolectric.res.ResourceLoader;
-import org.robolectric.util.AnnotationUtil;
 import org.robolectric.util.Logger;
 import org.spockframework.runtime.Sputnik;
 import org.spockframework.runtime.model.SpecInfo;
@@ -26,14 +26,20 @@ import org.spockframework.runtime.model.SpecInfo;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.*;
 
 public class RoboSputnik extends Runner implements Filterable, Sortable {
+    // Robolectric
+    // private static final String CONFIG_PROPERTIES = "robolectric.properties";
+    private static final Config DEFAULT_CONFIG = new Config.Implementation(defaultsFor(Config.class));
     private DependencyResolver dependencyResolver;
 
     protected DependencyResolver getJarResolver() {
@@ -142,8 +148,12 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         }
     }
 
+    /**
+     * NOTE: originally in RobolectricTestRunner getConfig takes Method as parameter
+     * and is a bit more complicated
+     */
     public Config getConfig(Class<?> clazz) {
-        Config config = AnnotationUtil.defaultsFor(Config.class);
+        Config config = DEFAULT_CONFIG;
 
         Config globalConfig = Config.Implementation.fromProperties(getConfigProperties());
         if (globalConfig != null) {
@@ -343,4 +353,14 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     }
 
 
+    private static <A extends Annotation> A defaultsFor(Class<A> annotation) {
+        return annotation.cast(
+                Proxy.newProxyInstance(annotation.getClassLoader(), new Class[]{annotation},
+                        new InvocationHandler() {
+                            public Object invoke(Object proxy, @NotNull Method method, Object[] args)
+                                    throws Throwable {
+                                return method.getDefaultValue();
+                            }
+                        }));
+    }
 }
