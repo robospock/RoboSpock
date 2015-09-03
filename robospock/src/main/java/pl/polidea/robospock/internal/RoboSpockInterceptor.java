@@ -9,13 +9,13 @@ import org.robolectric.bytecode.RobolectricInternals;
 import org.robolectric.bytecode.ShadowMap;
 import org.robolectric.bytecode.ShadowWrangler;
 import org.robolectric.internal.ParallelUniverseInterface;
-import org.robolectric.internal.ReflectionHelpers;
 import org.robolectric.internal.dependency.CachedDependencyResolver;
 import org.robolectric.internal.dependency.DependencyResolver;
 import org.robolectric.internal.dependency.LocalDependencyResolver;
 import org.robolectric.internal.dependency.MavenDependencyResolver;
 import org.robolectric.res.ResourceLoader;
 import org.robolectric.util.Logger;
+import org.robolectric.util.ReflectionHelpers;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
@@ -84,7 +84,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
 
             int sdkVersion = pickReportedSdkVersion(config, appManifest);
             Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
-            ReflectionHelpers.setStaticFieldReflectively(versionClass, "SDK_INT", sdkVersion);
+            ReflectionHelpers.setStaticField(versionClass, "SDK_INT", sdkVersion);
 
             ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(getJarResolver(), null);
             setUpApplicationState(null, parallelUniverseInterface, systemResourceLoader, appManifest, config);
@@ -109,7 +109,8 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
     private void setupConstants(Map<Field, Object> constants) {
         for (Field field : constants.keySet()) {
             Object newValue = constants.get(field);
-            Object oldValue = Robolectric.Reflection.setFinalStaticField(field, newValue);
+            Object oldValue = ReflectionHelpers.getStaticField(field);
+            ReflectionHelpers.setStaticField(field, newValue);
             constants.put(field, oldValue);
         }
     }
