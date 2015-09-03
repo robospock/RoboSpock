@@ -40,6 +40,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     // Robolectric
     // private static final String CONFIG_PROPERTIES = "robolectric.properties";
     private static final Config DEFAULT_CONFIG = new Config.Implementation(defaultsFor(Config.class));
+    private InstrumentingClassLoaderFactory instrumentingClassLoaderFactory;
     private DependencyResolver dependencyResolver;
 
     protected DependencyResolver getJarResolver() {
@@ -97,7 +98,10 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
         final Config config = getConfig(clazz);
         AndroidManifest appManifest = getAppManifest(config);
-        SdkEnvironment sdkEnvironment = getEnvironment(appManifest, config);
+        if (instrumentingClassLoaderFactory == null) {
+            instrumentingClassLoaderFactory = new InstrumentingClassLoaderFactory(createClassLoaderConfig(), getJarResolver());
+        }
+        SdkEnvironment sdkEnvironment = instrumentingClassLoaderFactory.getSdkEnvironment(new SdkConfig(pickSdkVersion(config, appManifest)));
 
         // todo: is this really needed?
         Thread.currentThread().setContextClassLoader(sdkEnvironment.getRobolectricClassLoader());
@@ -268,37 +272,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         }
     }
 
-    private SdkEnvironment getEnvironment(final AndroidManifest appManifest, final Config config) {
-        final SdkConfig sdkConfig = pickSdkVersion(appManifest, config);
-
-        // keep the most recently-used SdkEnvironment strongly reachable to prevent thrashing in low-memory situations.
-        if (getClass().equals(lastTestRunnerClass) && sdkConfig.equals(sdkConfig)) {
-            return lastSdkEnvironment;
-        }
-
-        lastTestRunnerClass = null;
-        lastSdkConfig = null;
-        lastSdkEnvironment = envHolder.getSdkEnvironment(sdkConfig, new SdkEnvironment.Factory() {
-            @Override public SdkEnvironment create() {
-                return createSdkEnvironment(sdkConfig);
-            }
-        });
-        lastTestRunnerClass = getClass();
-        lastSdkConfig = sdkConfig;
-        return lastSdkEnvironment;
-    }
-
-    public SdkEnvironment createSdkEnvironment(SdkConfig sdkConfig) {
-        Setup setup = createSetup();
-        ClassLoader robolectricClassLoader = createRobolectricClassLoader(setup, sdkConfig);
-        return new SdkEnvironment(sdkConfig, robolectricClassLoader);
-    }
-
-    protected ClassLoader createRobolectricClassLoader(Setup setup, SdkConfig sdkConfig) {
-        URL[] urls = getJarResolver().getLocalArtifactUrls(sdkConfig.getSdkClasspathDependencies());
-
-        return new AsmInstrumentingClassLoader(setup, urls);
-    }
 
     public Setup createSetup() {
         return new Setup() {
