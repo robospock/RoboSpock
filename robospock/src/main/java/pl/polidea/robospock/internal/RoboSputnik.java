@@ -39,9 +39,12 @@ import java.util.*;
 public class RoboSputnik extends Runner implements Filterable, Sortable {
     private static final String CONFIG_PROPERTIES = "robolectric.properties";
     private static final Config DEFAULT_CONFIG = new Config.Implementation(defaultsFor(Config.class));
+    //    private static final Map<Pair<AndroidManifest, SdkConfig>, ResourceLoader> resourceLoadersByManifestAndConfig = new HashMap<>();
+    private static final Map<ManifestIdentifier, AndroidManifest> appManifestsByFile = new HashMap<>();
+    private static ShadowMap mainShadowMap;
     private InstrumentingClassLoaderFactory instrumentingClassLoaderFactory;
+    //    private TestLifecycle<Application> testLifecycle;
     private DependencyResolver dependencyResolver;
-
 
     private Object sputnik;
 
@@ -51,7 +54,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
     public RoboSputnik(Class<?> clazz) throws InitializationError {
 
-        // Ripped from RobolectricTestRunner
+        // Ripped from RobolectricTestRunner::runChild()
 
         final Config config = getConfig(clazz);
         AndroidManifest appManifest = getAppManifest(config);
@@ -64,6 +67,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         Thread.currentThread().setContextClassLoader(sdkEnvironment.getRobolectricClassLoader());
 
         Class bootstrappedTestClass = sdkEnvironment.bootstrappedClass(clazz);
+//        RobolectricTestRunner.HelperTestRunner helperTestRunner = getHelperTestRunner(bootstrappedTestClass);
 
         // Since we have bootstrappedClass we may properly initialize
 
@@ -109,27 +113,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         }
     }
 
-    /**
-     * NOTE: originally in RobolectricTestRunner getConfig takes Method as parameter
-     * and is a bit more complicated
-     */
-    public Config getConfig(Class<?> clazz) {
-        Config config = DEFAULT_CONFIG;
-
-        Config globalConfig = Config.Implementation.fromProperties(getConfigProperties());
-        if (globalConfig != null) {
-            config = new Config.Implementation(config, globalConfig);
-        }
-
-        Config classConfig = clazz.getAnnotation(Config.class);
-        if (classConfig != null) {
-            config = new Config.Implementation(config, classConfig);
-        }
-
-        return config;
-    }
-
-
 //    public RobolectricTestRunner(final Class<?> testClass) throws InitializationError {
 
 //    @SuppressWarnings("unchecked")
@@ -155,7 +138,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
         return dependencyResolver;
     }
-    
+
     protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
         return new ShadowWrangler(shadowMap);
     }
@@ -207,7 +190,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 //    protected HelperTestRunner getHelperTestRunner(Class bootstrappedTestClass) {
 
 
-
 //    protected AndroidManifest getAppManifest(Config config) {
 //        if (config.manifest().equals(Config.NONE)) {
 //            return null;
@@ -253,10 +235,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return new AndroidManifest(manifestFile, appBaseDir.join("res"), appBaseDir.join("assets"));
     }
 
-    protected FsFile getBaseDir() {
-        return Fs.currentDirectory();
-    }
-
 //    protected AndroidManifest createAppManifestFromProperty(FsFile manifestFile) {
 //        String resProperty = System.getProperty("android.resources");
 //        String assetsProperty = System.getProperty("android.assets");
@@ -273,6 +251,29 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 //        return manifest;
 //    }
 
+    protected FsFile getBaseDir() {
+        return Fs.currentDirectory();
+    }
+
+    /**
+     * NOTE: originally in RobolectricTestRunner getConfig takes Method as parameter
+     * and is a bit more complicated
+     */
+    public Config getConfig(Class<?> clazz) {
+        Config config = DEFAULT_CONFIG;
+
+        Config globalConfig = Config.Implementation.fromProperties(getConfigProperties());
+        if (globalConfig != null) {
+            config = new Config.Implementation(config, globalConfig);
+        }
+
+        Config classConfig = clazz.getAnnotation(Config.class);
+        if (classConfig != null) {
+            config = new Config.Implementation(config, classConfig);
+        }
+
+        return config;
+    }
 
     protected Properties getConfigProperties() {
         ClassLoader classLoader = getClass().getClassLoader();
