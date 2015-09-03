@@ -82,14 +82,12 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
             parallelUniverseInterface.resetStaticState(config);
             parallelUniverseInterface.setSdkConfig(sdkEnvironment.getSdkConfig());
 
-            boolean strictI18n = determineI18nStrictState();
-
             int sdkVersion = pickReportedSdkVersion(config, appManifest);
             Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
             ReflectionHelpers.setStaticFieldReflectively(versionClass, "SDK_INT", sdkVersion);
 
             ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(getJarResolver(), null);
-            setUpApplicationState(null, parallelUniverseInterface, strictI18n, systemResourceLoader, appManifest, config);
+            setUpApplicationState(null, parallelUniverseInterface, systemResourceLoader, appManifest, config);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -259,24 +257,5 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
 
     protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
         return new ShadowWrangler(shadowMap, sdkConfig);
-    }
-
-    private boolean determineI18nStrictState() {
-        // Global
-        boolean strictI18n = globalI18nStrictEnabled();
-
-        // Test case class
-        Class<?> testClass = specInfo.getReflection();
-        if (testClass.getAnnotation(EnableStrictI18n.class) != null) {
-            strictI18n = true;
-        } else if (testClass.getAnnotation(DisableStrictI18n.class) != null) {
-            strictI18n = false;
-        }
-
-        return strictI18n;
-    }
-
-    private boolean globalI18nStrictEnabled() {
-        return Boolean.valueOf(System.getProperty("robolectric.strictI18n"));
     }
 }
