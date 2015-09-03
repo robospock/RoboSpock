@@ -10,7 +10,12 @@ import org.robolectric.bytecode.ShadowMap;
 import org.robolectric.bytecode.ShadowWrangler;
 import org.robolectric.internal.ParallelUniverseInterface;
 import org.robolectric.internal.ReflectionHelpers;
+import org.robolectric.internal.dependency.CachedDependencyResolver;
+import org.robolectric.internal.dependency.DependencyResolver;
+import org.robolectric.internal.dependency.LocalDependencyResolver;
+import org.robolectric.internal.dependency.MavenDependencyResolver;
 import org.robolectric.res.ResourceLoader;
+import org.robolectric.util.Logger;
 import org.spockframework.runtime.extension.AbstractMethodInterceptor;
 import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
@@ -31,7 +36,15 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
                 String dependencyDir = System.getProperty("robolectric.dependency.dir", ".");
                 dependencyResolver = new LocalDependencyResolver(new File(dependencyDir));
             } else {
-                dependencyResolver = new MavenDependencyResolver();
+                File cacheDir = new File(new File(System.getProperty("java.io.tmpdir")), "robolectric");
+                cacheDir.mkdir();
+
+                if (cacheDir.exists()) {
+                    Logger.info("Dependency cache location: %s", cacheDir.getAbsolutePath());
+                    dependencyResolver = new CachedDependencyResolver(new MavenDependencyResolver(), cacheDir, 60 * 60 * 24 * 1000);
+                } else {
+                    dependencyResolver = new MavenDependencyResolver();
+                }
             }
         }
 
