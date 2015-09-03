@@ -163,6 +163,30 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return properties;
     }
 
+//    protected Class<? extends TestLifecycle> getTestLifecycleClass() {
+
+    public static void injectClassHandler(ClassLoader robolectricClassLoader, ClassHandler classHandler) {
+        String className = RobolectricInternals.class.getName();
+        Class<?> robolectricInternalsClass = ReflectionHelpers.loadClass(robolectricClassLoader, className);
+        ReflectionHelpers.setStaticField(robolectricInternalsClass, "classHandler", classHandler);
+    }
+
+//    @Override
+//    protected Statement classBlock(RunNotifier notifier) {
+
+//    private void invokeAfterClass(final Class<?> clazz) throws Throwable {
+
+//    @Override
+//    protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+
+//    protected boolean shouldIgnore(FrameworkMethod method, Config config) {
+
+//    private Statement methodBlock(final FrameworkMethod method, final Config config, final AndroidManifest appManifest, final SdkEnvironment sdkEnvironment) {
+
+//    private void invokeBeforeClass(final Class clazz) throws Throwable {
+
+//    protected HelperTestRunner getHelperTestRunner(Class bootstrappedTestClass) {
+
     protected AndroidManifest getAppManifest(Config config) {
         if (config.manifest().equals(Config.NONE)) {
             return null;
@@ -224,6 +248,31 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return manifest;
     }
 
+    protected Properties getConfigProperties() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream resourceAsStream = classLoader.getResourceAsStream(CONFIG_PROPERTIES)) {
+            if (resourceAsStream == null) return null;
+            Properties properties = new Properties();
+            properties.load(resourceAsStream);
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void configureShadows(SdkEnvironment sdkEnvironment, Config config) {
+        ShadowMap shadowMap = createShadowMap();
+
+        if (config != null) {
+            Class<?>[] shadows = config.shadows();
+            if (shadows.length > 0) {
+                shadowMap = shadowMap.newBuilder().addShadowClasses(shadows).build();
+            }
+        }
+
+        ClassHandler classHandler = getClassHandler(sdkEnvironment, shadowMap);
+        injectClassHandler(sdkEnvironment.getRobolectricClassLoader(), classHandler);
+    }
 
     private void setPackageName(AndroidManifest manifest, String packageName) {
         Class<AndroidManifest> type = AndroidManifest.class;
@@ -273,6 +322,17 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
                 return super.shouldAcquire(name);
             }
         };
+    }
+
+    private ClassHandler getClassHandler(SdkEnvironment sdkEnvironment, ShadowMap shadowMap) {
+        ClassHandler classHandler;
+        synchronized (sdkEnvironment) {
+            classHandler = sdkEnvironment.classHandlersByShadowMap.get(shadowMap);
+            if (classHandler == null) {
+                classHandler = createClassHandler(shadowMap, sdkEnvironment.getSdkConfig());
+            }
+        }
+        return classHandler;
     }
 
 //    protected void setUpApplicationState(Method method, ParallelUniverseInterface parallelUniverseInterface, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
