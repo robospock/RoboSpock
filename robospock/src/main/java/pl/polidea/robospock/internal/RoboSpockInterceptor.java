@@ -3,7 +3,6 @@ package pl.polidea.robospock.internal;
 import android.app.Application;
 import android.os.Build;
 import org.robolectric.*;
-import org.robolectric.annotation.*;
 import org.robolectric.bytecode.ClassHandler;
 import org.robolectric.bytecode.RobolectricInternals;
 import org.robolectric.bytecode.ShadowMap;
@@ -93,58 +92,10 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
             throw new RuntimeException(e);
         }
 
-
-        Map<Field, Object> withConstantAnnos = getWithConstantAnnotations();
-
-        setupConstants(withConstantAnnos);
-
         try {
             invocation.proceed();
         } finally {
             parallelUniverseInterface.resetStaticState(config);
-        }
-
-    }
-
-    private void setupConstants(Map<Field, Object> constants) {
-        for (Field field : constants.keySet()) {
-            Object newValue = constants.get(field);
-            Object oldValue = ReflectionHelpers.getStaticField(field);
-            ReflectionHelpers.setStaticField(field, newValue);
-            constants.put(field, oldValue);
-        }
-    }
-
-    private Map<Field, Object> getWithConstantAnnotations() {
-        Map<Field, Object> constants = new HashMap<Field, Object>();
-
-        for (Annotation anno : specInfo.getReflection().getAnnotations()) {
-            addConstantFromAnnotation(constants, anno);
-        }
-
-        return constants;
-    }
-
-    private void addConstantFromAnnotation(Map<Field, Object> constants, Annotation anno) {
-        try {
-            String name = anno.annotationType().getName();
-            Object newValue = null;
-
-            if (name.equals(WithConstantString.class.getName())) {
-                newValue = anno.annotationType().getMethod("newValue").invoke(anno);
-            } else if (name.equals(WithConstantInt.class.getName())) {
-                newValue = anno.annotationType().getMethod("newValue").invoke(anno);
-            } else {
-                return;
-            }
-
-            @SuppressWarnings("rawtypes")
-            Class classWithField = (Class) anno.annotationType().getMethod("classWithField").invoke(anno);
-            String fieldName = (String) anno.annotationType().getMethod("fieldName").invoke(anno);
-            Field field = classWithField.getDeclaredField(fieldName);
-            constants.put(field, newValue);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
