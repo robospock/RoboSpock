@@ -37,32 +37,11 @@ import java.security.SecureRandom;
 import java.util.*;
 
 public class RoboSputnik extends Runner implements Filterable, Sortable {
-    // Robolectric
-    // private static final String CONFIG_PROPERTIES = "robolectric.properties";
+    private static final String CONFIG_PROPERTIES = "robolectric.properties";
     private static final Config DEFAULT_CONFIG = new Config.Implementation(defaultsFor(Config.class));
     private InstrumentingClassLoaderFactory instrumentingClassLoaderFactory;
     private DependencyResolver dependencyResolver;
 
-    protected DependencyResolver getJarResolver() {
-        if (dependencyResolver == null) {
-            if (Boolean.getBoolean("robolectric.offline")) {
-                String dependencyDir = System.getProperty("robolectric.dependency.dir", ".");
-                dependencyResolver = new LocalDependencyResolver(new File(dependencyDir));
-            } else {
-                File cacheDir = new File(new File(System.getProperty("java.io.tmpdir")), "robolectric");
-                cacheDir.mkdir();
-
-                if (cacheDir.exists()) {
-                    Logger.info("Dependency cache location: %s", cacheDir.getAbsolutePath());
-                    dependencyResolver = new CachedDependencyResolver(new MavenDependencyResolver(), cacheDir, 60 * 60 * 24 * 1000);
-                } else {
-                    dependencyResolver = new MavenDependencyResolver();
-                }
-            }
-        }
-
-        return dependencyResolver;
-    }
 
     private Object sputnik;
 
@@ -150,26 +129,33 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return config;
     }
 
-    protected Properties getConfigProperties() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream resourceAsStream = classLoader.getResourceAsStream("org.robolectric.Config.properties");
-        if (resourceAsStream == null) return null;
-        Properties properties = new Properties();
-        try {
-            properties.load(resourceAsStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return properties;
-    }
 
 //    public RobolectricTestRunner(final Class<?> testClass) throws InitializationError {
 
 //    @SuppressWarnings("unchecked")
 //    private void assureTestLifecycle(SdkEnvironment sdkEnvironment) {
 
-//    protected DependencyResolver getJarResolver() {
+    protected DependencyResolver getJarResolver() {
+        if (dependencyResolver == null) {
+            if (Boolean.getBoolean("robolectric.offline")) {
+                String dependencyDir = System.getProperty("robolectric.dependency.dir", ".");
+                dependencyResolver = new LocalDependencyResolver(new File(dependencyDir));
+            } else {
+                File cacheDir = new File(new File(System.getProperty("java.io.tmpdir")), "robolectric");
+                cacheDir.mkdir();
 
+                if (cacheDir.exists()) {
+                    Logger.info("Dependency cache location: %s", cacheDir.getAbsolutePath());
+                    dependencyResolver = new CachedDependencyResolver(new MavenDependencyResolver(), cacheDir, 60 * 60 * 24 * 1000);
+                } else {
+                    dependencyResolver = new MavenDependencyResolver();
+                }
+            }
+        }
+
+        return dependencyResolver;
+    }
+    
     protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
         return new ShadowWrangler(shadowMap);
     }
@@ -187,6 +173,13 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         Logger.debug("   Robolectric manifest path: " + manifestFile.getPath());
         Logger.debug("    Robolectric package name: " + packageName);
         return new AndroidManifest(manifestFile, resDir, assetDir, packageName);
+    }
+
+    public InstrumentationConfiguration createClassLoaderConfig() {
+        return InstrumentationConfiguration.newBuilder()
+//                .doNotAquireClass(ShadowMap.class.getName())
+                .doNotAquireClass(DependencyResolver.class.getName())
+                .build();
     }
 
 //    protected Class<? extends TestLifecycle> getTestLifecycleClass() {
