@@ -21,7 +21,8 @@ dependencies {
     compile "org.spockframework:spock-core:0.7-groovy-2.0"
 
     // Android part
-    compile "org.robolectric:robolectric:2.4"
+    compile "org.robolectric:robolectric:3.0"
+    compile 'org.robolectric:robolectric-utils:3.0'
     compile "com.google.android:android:4.1.1.4"
     compile "com.android.support:support-v4:19.0.1"
 
