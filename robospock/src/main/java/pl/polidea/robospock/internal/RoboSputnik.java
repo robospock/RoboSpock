@@ -64,16 +64,9 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         return dependencyResolver;
     }
 
-    private static final Map<Class<? extends RoboSputnik>, EnvHolder> envHoldersByTestRunner =
-            new HashMap<Class<? extends RoboSputnik>, EnvHolder>();
-
-    private static final Map<AndroidManifest, ResourceLoader> resourceLoadersByAppManifest = new HashMap<AndroidManifest, ResourceLoader>();
-
     private static Class<? extends RoboSputnik> lastTestRunnerClass;
     private static SdkConfig lastSdkConfig;
     private static SdkEnvironment lastSdkEnvironment;
-
-    private final EnvHolder envHolder;
 
     private Object sputnik;
 
@@ -84,17 +77,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     public RoboSputnik(Class<?> clazz) throws InitializationError {
 
         // Ripped from RobolectricTestRunner
-
-        EnvHolder envHolder;
-        synchronized (envHoldersByTestRunner) {
-            Class<? extends RoboSputnik> testRunnerClass = getClass();
-            envHolder = envHoldersByTestRunner.get(testRunnerClass);
-            if (envHolder == null) {
-                envHolder = new EnvHolder();
-                envHoldersByTestRunner.put(testRunnerClass, envHolder);
-            }
-        }
-        this.envHolder = envHolder;
 
         final Config config = getConfig(clazz);
         AndroidManifest appManifest = getAppManifest(config);
