@@ -2,16 +2,23 @@ package pl.polidea.robospock.internal;
 
 import android.app.Application;
 import android.os.Build;
-import org.robolectric.*;
-import org.robolectric.bytecode.ClassHandler;
-import org.robolectric.bytecode.RobolectricInternals;
-import org.robolectric.bytecode.ShadowMap;
-import org.robolectric.bytecode.ShadowWrangler;
+
+import org.robolectric.DefaultTestLifecycle;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.TestLifecycle;
+import org.robolectric.annotation.Config;
 import org.robolectric.internal.ParallelUniverseInterface;
+import org.robolectric.internal.SdkConfig;
+import org.robolectric.internal.SdkEnvironment;
+import org.robolectric.internal.bytecode.ClassHandler;
+import org.robolectric.internal.bytecode.RobolectricInternals;
+import org.robolectric.internal.bytecode.ShadowMap;
+import org.robolectric.internal.bytecode.ShadowWrangler;
 import org.robolectric.internal.dependency.CachedDependencyResolver;
 import org.robolectric.internal.dependency.DependencyResolver;
 import org.robolectric.internal.dependency.LocalDependencyResolver;
 import org.robolectric.internal.dependency.MavenDependencyResolver;
+import org.robolectric.manifest.AndroidManifest;
 import org.robolectric.res.ResourceLoader;
 import org.robolectric.util.Logger;
 import org.robolectric.util.ReflectionHelpers;
@@ -20,11 +27,8 @@ import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RoboSpockInterceptor extends AbstractMethodInterceptor {
     private DependencyResolver dependencyResolver;
@@ -201,6 +205,6 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
     }
 
     protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
-        return new ShadowWrangler(shadowMap, sdkConfig);
+        return new ShadowWrangler(shadowMap);
     }
 }
