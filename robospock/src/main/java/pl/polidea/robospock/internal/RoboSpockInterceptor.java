@@ -85,7 +85,7 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
             Class<?> versionClass = sdkEnvironment.bootstrappedClass(Build.VERSION.class);
             ReflectionHelpers.setStaticField(versionClass, "SDK_INT", sdkVersion);
 
-            ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(getJarResolver(), null);
+            ResourceLoader systemResourceLoader = sdkEnvironment.getSystemResourceLoader(getJarResolver());
             setUpApplicationState(null, parallelUniverseInterface, systemResourceLoader, appManifest, config);
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,7 +196,6 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
             if (classHandler == null) {
                 classHandler = createClassHandler(shadowMap, sdkEnvironment.getSdkConfig());
             }
-            sdkEnvironment.setCurrentClassHandler(classHandler);
         }
         return classHandler;
     }
