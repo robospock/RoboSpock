@@ -76,7 +76,9 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
     @Override
     public void interceptSpecExecution(IMethodInvocation invocation) throws Throwable {
 
-        configureShadows(sdkEnvironment, config);
+        // shadows should be configured once
+        // and it's done in RoboSputnik
+        // configureShadows(sdkEnvironment, config);
 
         ParallelUniverseInterface parallelUniverseInterface = getHooksInterface(sdkEnvironment);
         try {

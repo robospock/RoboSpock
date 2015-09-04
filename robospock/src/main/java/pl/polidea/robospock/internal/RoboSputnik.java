@@ -74,6 +74,8 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         }
         SdkEnvironment sdkEnvironment = instrumentingClassLoaderFactory.getSdkEnvironment(new SdkConfig(pickSdkVersion(config, appManifest)));
 
+        configureShadows(sdkEnvironment, config);
+
         // todo: is this really needed?
         Thread.currentThread().setContextClassLoader(sdkEnvironment.getRobolectricClassLoader());
 
