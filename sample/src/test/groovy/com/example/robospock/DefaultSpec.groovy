@@ -6,7 +6,7 @@ import org.robolectric.annotation.Config
 import com.example.robospock.shadow.MyActivityManagerShadow
 import util.SampleSpecification
 
-@Config(shadows = [MyActivityManagerShadow])
+@Config(shadows = [MyActivityManagerShadow], manifest="./src/main/AndroidManifest.xml")
 class DefaultSpec extends SampleSpecification {
 
     def "should find text view and compare text value"() {
