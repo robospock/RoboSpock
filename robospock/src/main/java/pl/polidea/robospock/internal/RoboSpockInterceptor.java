@@ -4,16 +4,11 @@ import android.app.Application;
 import android.os.Build;
 
 import org.robolectric.DefaultTestLifecycle;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.TestLifecycle;
 import org.robolectric.annotation.Config;
 import org.robolectric.internal.ParallelUniverseInterface;
 import org.robolectric.internal.SdkConfig;
 import org.robolectric.internal.SdkEnvironment;
-import org.robolectric.internal.bytecode.ClassHandler;
-import org.robolectric.internal.bytecode.RobolectricInternals;
-import org.robolectric.internal.bytecode.ShadowMap;
-import org.robolectric.internal.bytecode.ShadowWrangler;
 import org.robolectric.internal.dependency.CachedDependencyResolver;
 import org.robolectric.internal.dependency.DependencyResolver;
 import org.robolectric.internal.dependency.LocalDependencyResolver;
@@ -27,7 +22,6 @@ import org.spockframework.runtime.extension.IMethodInvocation;
 import org.spockframework.runtime.model.SpecInfo;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class RoboSpockInterceptor extends AbstractMethodInterceptor {
@@ -54,7 +48,6 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         return dependencyResolver;
     }
 
-    private static ShadowMap mainShadowMap;
     private TestLifecycle<Application> testLifecycle;
 
     private SpecInfo specInfo;
@@ -152,61 +145,5 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
 
     protected Class<? extends TestLifecycle> getTestLifecycleClass() {
         return DefaultTestLifecycle.class;
-    }
-
-    protected void configureShadows(SdkEnvironment sdkEnvironment, Config config) {
-        ShadowMap shadowMap = createShadowMap();
-
-        if (config != null) {
-            Class<?>[] shadows = config.shadows();
-            if (shadows.length > 0) {
-                shadowMap = shadowMap.newBuilder()
-                        .addShadowClasses(shadows)
-                        .build();
-            }
-        }
-
-        ClassHandler classHandler = getClassHandler(sdkEnvironment, shadowMap);
-        injectClassHandler(sdkEnvironment.getRobolectricClassLoader(), classHandler);
-    }
-
-    public static void injectClassHandler(ClassLoader robolectricClassLoader, ClassHandler classHandler) {
-        try {
-            String className = RobolectricInternals.class.getName();
-            Class<?> robolectricInternalsClass = robolectricClassLoader.loadClass(className);
-            Field field = robolectricInternalsClass.getDeclaredField("classHandler");
-            field.setAccessible(true);
-            field.set(null, classHandler);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected ShadowMap createShadowMap() {
-        synchronized (RobolectricTestRunner.class) {
-            if (mainShadowMap != null) return mainShadowMap;
-
-            mainShadowMap = new ShadowMap.Builder().build();
-            return mainShadowMap;
-        }
-    }
-
-    private ClassHandler getClassHandler(SdkEnvironment sdkEnvironment, ShadowMap shadowMap) {
-        ClassHandler classHandler;
-        synchronized (sdkEnvironment) {
-            classHandler = sdkEnvironment.classHandlersByShadowMap.get(shadowMap);
-            if (classHandler == null) {
-                classHandler = createClassHandler(shadowMap, sdkEnvironment.getSdkConfig());
-            }
-        }
-        return classHandler;
-    }
-
-    protected ClassHandler createClassHandler(ShadowMap shadowMap, SdkConfig sdkConfig) {
-        return new ShadowWrangler(shadowMap);
     }
 }

@@ -126,6 +126,22 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         }
     }
 
+    public Description getDescription() {
+        return ((Runner) sputnik).getDescription();
+    }
+
+    public void run(RunNotifier notifier) {
+        ((Runner) sputnik).run(notifier);
+    }
+
+    public void filter(Filter filter) throws NoTestsRemainException {
+        ((Filterable) sputnik).filter(filter);
+    }
+
+    public void sort(Sorter sorter) {
+        ((Sortable) sputnik).sort(sorter);
+    }
+
 //    public RobolectricTestRunner(final Class<?> testClass) throws InitializationError {
 
 //    @SuppressWarnings("unchecked")
@@ -202,67 +218,72 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
 
 //    protected HelperTestRunner getHelperTestRunner(Class bootstrappedTestClass) {
 
-
-//    protected AndroidManifest getAppManifest(Config config) {
-//        if (config.manifest().equals(Config.NONE)) {
-//            return null;
-//        }
-//
-//        boolean propertyAvailable = false;
-//        FsFile manifestFile = null;
-//        String manifestProperty = System.getProperty("android.manifest");
-//        if (config.manifest().equals(Config.DEFAULT) && manifestProperty != null) {
-//            manifestFile = Fs.fileFromPath(manifestProperty);
-//            propertyAvailable = true;
-//        } else {
-//            FsFile fsFile = Fs.currentDirectory();
-//            String manifestStr = config.manifest().equals(Config.DEFAULT) ? "AndroidManifest.xml" : config.manifest();
-//            manifestFile = fsFile.join(manifestStr);
-//        }
-//
-//        synchronized (envHolder) {
-//            AndroidManifest appManifest;
-//            appManifest = envHolder.appManifestsByFile.get(manifestFile);
-//            if (appManifest == null) {
-//
-//                long startTime = System.currentTimeMillis();
-//                appManifest = propertyAvailable ? createAppManifestFromProperty(manifestFile) : createAppManifest(manifestFile);
-//                if (DocumentLoader.DEBUG_PERF)
-//                    System.out.println(String.format("%4dms spent in %s", System.currentTimeMillis() - startTime, manifestFile));
-//
-//                envHolder.appManifestsByFile.put(manifestFile, appManifest);
-//            }
-//            return appManifest;
-//        }
-//    }
-
-    protected AndroidManifest createAppManifest(FsFile manifestFile) {
-        if (!manifestFile.exists()) {
-            System.out.print("WARNING: No manifest file found at " + manifestFile.getPath() + ".");
-            System.out.println("Falling back to the Android OS resources only.");
-            System.out.println("To remove this warning, annotate your test class with @Config(manifest=Config.NONE).");
+    protected AndroidManifest getAppManifest(Config config) {
+        if (config.manifest().equals(Config.NONE)) {
             return null;
         }
 
-        FsFile appBaseDir = manifestFile.getParent();
-        return new AndroidManifest(manifestFile, appBaseDir.join("res"), appBaseDir.join("assets"));
-    }
+        String manifestProperty = System.getProperty("android.manifest");
+        String resourcesProperty = System.getProperty("android.resources");
+        String assetsProperty = System.getProperty("android.assets");
+        String packageName = System.getProperty("android.package");
 
-//    protected AndroidManifest createAppManifestFromProperty(FsFile manifestFile) {
-//        String resProperty = System.getProperty("android.resources");
-//        String assetsProperty = System.getProperty("android.assets");
-//        AndroidManifest manifest = new AndroidManifest(manifestFile, Fs.fileFromPath(resProperty), Fs.fileFromPath(assetsProperty));
-//        String packageProperty = System.getProperty("android.package");
-//
-//        if (packageProperty != null) {
-//            try {
-//                setPackageName(manifest, packageProperty);
-//            } catch (IllegalArgumentException e) {
-//                System.out.println("WARNING: Faild to set package name for " + manifestFile.getPath() + ".");
-//            }
-//        }
-//        return manifest;
-//    }
+        FsFile baseDir;
+        FsFile manifestFile;
+        FsFile resDir;
+        FsFile assetDir;
+
+        boolean defaultManifest = config.manifest().equals(Config.DEFAULT);
+        if (defaultManifest && manifestProperty != null) {
+            manifestFile = Fs.fileFromPath(manifestProperty);
+            baseDir = manifestFile.getParent();
+        } else {
+            manifestFile = getBaseDir().join(defaultManifest ? AndroidManifest.DEFAULT_MANIFEST_NAME : config.manifest());
+            baseDir = manifestFile.getParent();
+        }
+
+        boolean defaultRes = Config.DEFAULT_RES_FOLDER.equals(config.resourceDir());
+        if (defaultRes && resourcesProperty != null) {
+            resDir = Fs.fileFromPath(resourcesProperty);
+        } else {
+            resDir = baseDir.join(config.resourceDir());
+        }
+
+        boolean defaultAssets = Config.DEFAULT_ASSET_FOLDER.equals(config.assetDir());
+        if (defaultAssets && assetsProperty != null) {
+            assetDir = Fs.fileFromPath(assetsProperty);
+        } else {
+            assetDir = baseDir.join(config.assetDir());
+        }
+
+        String configPackageName = config.packageName();
+        if (configPackageName != null && !configPackageName.isEmpty()) {
+            packageName = configPackageName;
+        }
+
+        List<FsFile> libraryDirs = null;
+        if (config.libraries().length > 0) {
+            libraryDirs = new ArrayList<>();
+            for (String libraryDirName : config.libraries()) {
+                libraryDirs.add(baseDir.join(libraryDirName));
+            }
+        }
+
+        ManifestIdentifier identifier = new ManifestIdentifier(manifestFile, resDir, assetDir, packageName, libraryDirs);
+        synchronized (appManifestsByFile) {
+            AndroidManifest appManifest;
+            appManifest = appManifestsByFile.get(identifier);
+            if (appManifest == null) {
+                appManifest = createAppManifest(manifestFile, resDir, assetDir, packageName);
+                if (libraryDirs != null) {
+                    appManifest.setLibraryDirectories(libraryDirs);
+                }
+                appManifestsByFile.put(identifier, appManifest);
+            }
+            return appManifest;
+        }
+
+    }
 
     protected FsFile getBaseDir() {
         return Fs.currentDirectory();
@@ -314,55 +335,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         injectClassHandler(sdkEnvironment.getRobolectricClassLoader(), classHandler);
     }
 
-//    private void setPackageName(AndroidManifest manifest, String packageName) {
-//        Class<AndroidManifest> type = AndroidManifest.class;
-//        try {
-//            Method setPackageNameMethod = type.getMethod("setPackageName", String.class);
-//            setPackageNameMethod.setAccessible(true);
-//            setPackageNameMethod.invoke(manifest, packageName);
-//            return;
-//        } catch (NoSuchMethodException e) {
-//            try {
-//
-//                //Force execute parseAndroidManifest.
-//                manifest.getPackageName();
-//
-//                Field packageNameField = type.getDeclaredField("packageName");
-//                packageNameField.setAccessible(true);
-//                packageNameField.set(manifest, packageName);
-//                return;
-//            } catch (Exception fieldError) {
-//                throw new IllegalArgumentException(fieldError);
-//            }
-//        } catch (Exception methodError) {
-//            throw new IllegalArgumentException(methodError);
-//        }
-//    }
-
-//    public Setup createSetup() {
-//        return new Setup() {
-//            @Override
-//            public boolean shouldAcquire(String name) {
-//
-//                List<String> prefixes = Arrays.asList(
-//                        DependencyResolver.class.getName(),
-//                        "org.junit",
-//                        ShadowMap.class.getName()
-//                );
-//
-//                if(name != null) {
-//                    for(String prefix : prefixes) {
-//                        if (name.startsWith(prefix)) {
-//                            return false;
-//                        }
-//                    }
-//                }
-//
-//                return super.shouldAcquire(name);
-//            }
-//        };
-//    }
-
     private ClassHandler getClassHandler(SdkEnvironment sdkEnvironment, ShadowMap shadowMap) {
         ClassHandler classHandler;
         synchronized (sdkEnvironment) {
@@ -386,22 +358,6 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
         } else {
             return SdkConfig.FALLBACK_SDK_VERSION;
         }
-    }
-
-    public Description getDescription() {
-        return ((Runner) sputnik).getDescription();
-    }
-
-    public void run(RunNotifier notifier) {
-        ((Runner) sputnik).run(notifier);
-    }
-
-    public void filter(Filter filter) throws NoTestsRemainException {
-        ((Filterable) sputnik).filter(filter);
-    }
-
-    public void sort(Sorter sorter) {
-        ((Sortable) sputnik).sort(sorter);
     }
 
 //    private ParallelUniverseInterface getHooksInterface(SdkEnvironment sdkEnvironment) {
@@ -482,71 +438,5 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
                                 return method.getDefaultValue();
                             }
                         }));
-    }
-
-    protected AndroidManifest getAppManifest(Config config) {
-        if (config.manifest().equals(Config.NONE)) {
-            return null;
-        }
-
-        String manifestProperty = System.getProperty("android.manifest");
-        String resourcesProperty = System.getProperty("android.resources");
-        String assetsProperty = System.getProperty("android.assets");
-        String packageName = System.getProperty("android.package");
-
-        FsFile baseDir;
-        FsFile manifestFile;
-        FsFile resDir;
-        FsFile assetDir;
-
-        boolean defaultManifest = config.manifest().equals(Config.DEFAULT);
-        if (defaultManifest && manifestProperty != null) {
-            manifestFile = Fs.fileFromPath(manifestProperty);
-            baseDir = manifestFile.getParent();
-        } else {
-            manifestFile = getBaseDir().join(defaultManifest ? AndroidManifest.DEFAULT_MANIFEST_NAME : config.manifest());
-            baseDir = manifestFile.getParent();
-        }
-
-        boolean defaultRes = Config.DEFAULT_RES_FOLDER.equals(config.resourceDir());
-        if (defaultRes && resourcesProperty != null) {
-            resDir = Fs.fileFromPath(resourcesProperty);
-        } else {
-            resDir = baseDir.join(config.resourceDir());
-        }
-
-        boolean defaultAssets = Config.DEFAULT_ASSET_FOLDER.equals(config.assetDir());
-        if (defaultAssets && assetsProperty != null) {
-            assetDir = Fs.fileFromPath(assetsProperty);
-        } else {
-            assetDir = baseDir.join(config.assetDir());
-        }
-
-        String configPackageName = config.packageName();
-        if (configPackageName != null && !configPackageName.isEmpty()) {
-            packageName = configPackageName;
-        }
-
-        List<FsFile> libraryDirs = null;
-        if (config.libraries().length > 0) {
-            libraryDirs = new ArrayList<>();
-            for (String libraryDirName : config.libraries()) {
-                libraryDirs.add(baseDir.join(libraryDirName));
-            }
-        }
-
-        ManifestIdentifier identifier = new ManifestIdentifier(manifestFile, resDir, assetDir, packageName, libraryDirs);
-        synchronized (appManifestsByFile) {
-            AndroidManifest appManifest;
-            appManifest = appManifestsByFile.get(identifier);
-            if (appManifest == null) {
-                appManifest = createAppManifest(manifestFile, resDir, assetDir, packageName);
-                if (libraryDirs != null) {
-                    appManifest.setLibraryDirectories(libraryDirs);
-                }
-                appManifestsByFile.put(identifier, appManifest);
-            }
-            return appManifest;
-        }
     }
 }
