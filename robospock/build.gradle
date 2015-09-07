@@ -14,6 +14,13 @@ def artifactId = 'robospock'
 group = 'org.robospock'
 description = 'RoboSpock testing library'
 
+configurations {
+    provided
+}
+sourceSets {
+    main { compileClasspath += configurations.provided }
+}
+
 dependencies {
     compile "org.codehaus.groovy:groovy-all:2.3.8"
     compile "org.spockframework:spock-core:0.7-groovy-2.0"
@@ -21,7 +28,7 @@ dependencies {
     // Android part
     compile "org.robolectric:robolectric:3.0"
     compile 'org.robolectric:robolectric-utils:3.0'
-    compile 'com.intellij:annotations:12.0'
+    provided 'com.intellij:annotations:12.0'
     compile "com.google.android:android:4.1.1.4"
     compile "com.android.support:support-v4:19.0.1"
 
