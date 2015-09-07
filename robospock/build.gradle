@@ -27,7 +27,6 @@ dependencies {
 
     // Android part
     compile "org.robolectric:robolectric:3.0"
-    compile 'org.robolectric:robolectric-utils:3.0'
     provided 'com.intellij:annotations:12.0'
     provided 'org.robolectric:android-all:5.0.0_r2-robolectric-1'
     testCompile 'org.robolectric:android-all:5.0.0_r2-robolectric-1'
