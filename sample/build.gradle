@@ -40,7 +40,7 @@ dependencies {
     compile 'org.roboguice:roboguice:2.0'
     compile 'com.j256.ormlite:ormlite-android:4.41'
 
-    testCompile 'org.robospock:robospock:0.6.0-rc'
+    testCompile project(':robospock')
 
     // robolectric requires is it to run
     // if you're not using it in your code just leave it as a testCompile depedency

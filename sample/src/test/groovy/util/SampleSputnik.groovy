@@ -10,21 +10,22 @@ class SampleSputnik extends RoboSputnik {
         super(clazz);
     }
 
-    @Override
-    public Config getConfig(Class<?> clazz) {
-        Config classConfig = clazz.getAnnotation(Config.class);
-        Config.Implementation config = new Config.Implementation(18,
-                "src/main/AndroidManifest.xml",
-                "",
-                "src/main/res",
-                18,
-                new Class[0],
-                Application.class,
-                new String[0]);
-        if (classConfig != null) {
-            config = new Config.Implementation(config, classConfig);
-        }
-
-        return config;
-    }
+//    @Override
+//    public Config getConfig(Class<?> clazz) {
+//        Config classConfig = clazz.getAnnotation(Config.class);
+//        Config.Implementation config = new Config.Implementation(
+//                18,
+//                "src/main/AndroidManifest.xml",
+//                "",
+//                "src/main/res",
+//                18,
+//                new Class[0],
+//                Application.class,
+//                new String[0]);
+//        if (classConfig != null) {
+//            config = new Config.Implementation(config, classConfig);
+//        }
+//
+//        return config;
+//    }
 }
