@@ -1,1 +1,2 @@
-language: java
+language: android
+sudo: false
