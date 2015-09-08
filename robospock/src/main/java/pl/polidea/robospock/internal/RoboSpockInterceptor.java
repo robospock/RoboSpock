@@ -73,6 +73,8 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         // and it's done in RoboSputnik
         // configureShadows(sdkEnvironment, config);
 
+        Thread.currentThread().setContextClassLoader(sdkEnvironment.getRobolectricClassLoader());
+
         ParallelUniverseInterface parallelUniverseInterface = getHooksInterface(sdkEnvironment);
         try {
             assureTestLifecycle(sdkEnvironment);
@@ -94,8 +96,11 @@ public class RoboSpockInterceptor extends AbstractMethodInterceptor {
         try {
             invocation.proceed();
         } finally {
+            parallelUniverseInterface.tearDownApplication();
             parallelUniverseInterface.resetStaticState(config);
         }
+
+        Thread.currentThread().setContextClassLoader(RoboSputnik.class.getClassLoader());
     }
 
     protected void setUpApplicationState(Method method, ParallelUniverseInterface parallelUniverseInterface, ResourceLoader systemResourceLoader, AndroidManifest appManifest, Config config) {
