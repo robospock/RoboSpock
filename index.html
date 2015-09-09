@@ -91,7 +91,7 @@ layout: main
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <pre><code class="prettyprint">def "should display hello text"() {
     given:
-    def textView = new TextView(Robolectric.application)
+    def textView = new TextView(RuntimeEnvironment.application)
 
     expect:
     textView.text == "Hello"
@@ -141,15 +141,10 @@ apply plugin: 'groovyx.grooid.groovy-android'
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    testCompile 'org.robospock:robospock:0.6.0-rc'
-
-    // robolectric requires is it to run
-    // if you're not using it in your code just leave it as a testCompile depedency
-    testCompile 'com.android.support:support-v4:19.0.1'
+    testCompile 'org.robospock:robospock:0.7.0'
 }
 </code></pre>
             </div>
