@@ -7,7 +7,7 @@ import org.robolectric.res.FileFsFile;
 import org.robolectric.util.Logger;
 import org.robolectric.util.ReflectionHelpers;
 
-public abstract class GradleRoboSputnik extends RoboSputnik {
+public class GradleRoboSputnik extends RoboSputnik {
 
     // Copied from org.robolectric.RobolectricGradleTestRunner
     private static final String BUILD_OUTPUT = "build/intermediates";

@@ -4,10 +4,10 @@ import com.example.robospock.activity.MainActivity
 import com.example.robospock.shadow.MyActivityManagerShadow
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import util.SampleSpecification
+import pl.polidea.robospock.GradleRoboSpecification
 
 @Config(shadows = [MyActivityManagerShadow], constants = BuildConfig)
-class DefaultSpec extends SampleSpecification {
+class DefaultSpec extends GradleRoboSpecification {
 
     def "should find text view and compare text value"() {
         given:
