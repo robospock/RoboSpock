@@ -6,7 +6,7 @@ import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 import util.SampleSpecification
 
-@Config(shadows = [MyActivityManagerShadow])
+@Config(shadows = [MyActivityManagerShadow], constants = BuildConfig)
 class DefaultSpec extends SampleSpecification {
 
     def "should find text view and compare text value"() {

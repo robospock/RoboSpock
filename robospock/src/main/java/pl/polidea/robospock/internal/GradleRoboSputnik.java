@@ -9,6 +9,7 @@ import org.robolectric.util.ReflectionHelpers;
 
 public abstract class GradleRoboSputnik extends RoboSputnik {
 
+    // Copied from org.robolectric.RobolectricGradleTestRunner
     private static final String BUILD_OUTPUT = "build/intermediates";
 
     public GradleRoboSputnik(Class<?> clazz) throws InitializationError {
@@ -17,21 +18,22 @@ public abstract class GradleRoboSputnik extends RoboSputnik {
 
     @Override
     protected AndroidManifest getAppManifest(Config config) {
-        Class<?> buildConfigClass = getBuildConfig();
-        if (buildConfigClass == Void.class) {
-            Logger.error("Please provide valid buildConfig class");
-            throw new RuntimeException("Please provide valid buildConfig class");
+        // Copied from org.robolectric.RobolectricGradleTestRunner
+        if (config.constants() == Void.class) {
+            Logger.error("Field 'constants' not specified in @Config annotation");
+            Logger.error("This is required when using RobolectricGradleTestRunner!");
+            throw new RuntimeException("No 'constants' field in @Config annotation!");
         }
 
-        final String type = getType(buildConfigClass);
-        final String flavor = getFlavor(buildConfigClass);
-        final String packageName = getPackageName(buildConfigClass, config.packageName());
+        final String type = getType(config);
+        final String flavor = getFlavor(config);
+        final String packageName = getPackageName(config);
 
         final FileFsFile res;
         final FileFsFile assets;
         final FileFsFile manifest;
 
-
+        // res/merged added in Android Gradle plugin 1.3-beta1
         if (FileFsFile.from(BUILD_OUTPUT, "res", "merged").exists()) {
             res = FileFsFile.from(BUILD_OUTPUT, "res", "merged", flavor, type);
         } else if (FileFsFile.from(BUILD_OUTPUT, "res").exists()) {
@@ -59,34 +61,35 @@ public abstract class GradleRoboSputnik extends RoboSputnik {
         return new AndroidManifest(manifest, res, assets, packageName);
     }
 
-    private static String getType(Class<?> clazz) {
+    private static String getType(Config config) {
+        // Copied from org.robolectric.RobolectricGradleTestRunner
         try {
-            return ReflectionHelpers.getStaticField(clazz, "BUILD_TYPE");
+            return ReflectionHelpers.getStaticField(config.constants(), "BUILD_TYPE");
         } catch (Throwable e) {
             return null;
         }
     }
 
-    private static String getFlavor(Class<?> constants) {
+    private static String getFlavor(Config config) {
+        // Copied from org.robolectric.RobolectricGradleTestRunner
         try {
-            return ReflectionHelpers.getStaticField(constants, "FLAVOR");
+            return ReflectionHelpers.getStaticField(config.constants(), "FLAVOR");
         } catch (Throwable e) {
             return null;
         }
     }
 
-    private static String getPackageName(Class<?> clazz, String packageNameFromConfig) {
+    private static String getPackageName(Config config) {
+        // Copied from org.robolectric.RobolectricGradleTestRunner
         try {
-            final String packageName = packageNameFromConfig;
+            final String packageName = config.packageName();
             if (packageName != null && !packageName.isEmpty()) {
                 return packageName;
             } else {
-                return ReflectionHelpers.getStaticField(clazz, "APPLICATION_ID");
+                return ReflectionHelpers.getStaticField(config.constants(), "APPLICATION_ID");
             }
         } catch (Throwable e) {
             return null;
         }
     }
-
-    public abstract Class<?> getBuildConfig();
 }
