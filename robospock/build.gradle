@@ -89,12 +89,12 @@ uploadArchives {
             name 'robospock'
             packaging 'jar'
             description 'Library brings Robolectric unit tests option to Spock testing framework.'
-            url 'https://github.com/Polidea/Robospock'
+            url 'http://robospock.org/'
 
             scm {
-                url 'scm:git@github.com:Polidea/RoboSpock.git'
-                connection 'scm:git@github.com:Polidea/RoboSpock.git'
-                developerConnection 'scm:git@github.com:Polidea/RoboSpock.git'
+                url 'scm:git@github.com:robospock/RoboSpock.git'
+                connection 'scm:git@github.com:robospock/RoboSpock.git'
+                developerConnection 'scm:git@github.com:robospock/RoboSpock.git'
             }
 
             licenses {
