@@ -5,5 +5,5 @@ import pl.polidea.robospock.internal.GradleRoboSputnik
 import spock.lang.Specification
 
 @RunWith(GradleRoboSputnik)
-class RoboGradleSpecification extends Specification {
+class GradleRoboSpecification extends Specification {
 }
