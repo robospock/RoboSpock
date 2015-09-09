@@ -1,24 +1,22 @@
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 apply {
     plugin 'groovy'
     plugin 'signing'
     plugin 'maven'
+    plugin 'idea'
 }
-
-def artifactId = 'robospock'
-group = 'org.robospock'
-description = 'RoboSpock testing library'
 
 configurations {
     provided
 }
 sourceSets {
-    main { compileClasspath += configurations.provided }
+    main {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
+    test {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
 }
 
 dependencies {
@@ -32,93 +30,6 @@ dependencies {
     testCompile 'org.robolectric:android-all:5.0.0_r2-robolectric-1'
 }
 
-/*
- *
- * It's all about OSS Sonatype from now to the bottom
- *
- */
-
-// Set up for Sonatype OSS repository
-def isReleaseVersion = !version.endsWith('SNAPSHOT')
-
-// custom tasks for creating source/javadoc jars
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// add javadoc/source jar the artifacts
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask(':uploadArchives') }
-
-    sign configurations.archives
-}
-
-def uploadUsername = project.hasProperty('sonatypeUsername') ? project['sonatypeUsername'] : ''
-def uploadPassword = project.hasProperty('sonatypePassword') ? project['sonatypePassword'] : ''
-
-uploadArchives {
-    repositories.mavenDeployer {
-        beforeDeployment { MavenDeployment deployment ->
-            if (isReleaseVersion) {
-                signing.signPom(deployment)
-            }
-        }
-
-        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-            authentication(userName: uploadUsername, password: uploadPassword)
-        }
-
-        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-            authentication(userName: uploadUsername, password: uploadPassword)
-        }
-
-        pom.artifactId = artifactId
-
-        pom.project {
-            name 'robospock'
-            packaging 'jar'
-            description 'Library brings Robolectric unit tests option to Spock testing framework.'
-            url 'http://robospock.org/'
-
-            scm {
-                url 'scm:git@github.com:robospock/RoboSpock.git'
-                connection 'scm:git@github.com:robospock/RoboSpock.git'
-                developerConnection 'scm:git@github.com:robospock/RoboSpock.git'
-            }
-
-            licenses {
-                license {
-                    name 'Apache License 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0'
-                    distribution 'repo'
-                }
-            }
-
-            developers {
-                developer {
-                    id 'pjakubczyk'
-                    name 'Przemek Jakubczyk'
-                }
-                developer {
-                    id 'wojtek.erbetowski'
-                    name 'Wojtek Erbetowski'
-                }
-            }
-        }
-    }
-}
-
 test {
     testLogging {
         events "passed", "skipped", "failed"
@@ -130,3 +41,10 @@ test {
     }
 }
 
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
+}
+
+apply from: "release.gradle"
