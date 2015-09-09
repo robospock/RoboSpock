@@ -2,13 +2,21 @@ apply {
     plugin 'groovy'
     plugin 'signing'
     plugin 'maven'
+    plugin 'idea'
 }
 
 configurations {
     provided
 }
 sourceSets {
-    main { compileClasspath += configurations.provided }
+    main {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
+    test {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
 }
 
 dependencies {
@@ -30,6 +38,12 @@ test {
         lifecycle {
             exceptionFormat "full"
         }
+    }
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
     }
 }
 
