@@ -1,9 +1,3 @@
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 apply {
     plugin 'groovy'
     plugin 'signing'
