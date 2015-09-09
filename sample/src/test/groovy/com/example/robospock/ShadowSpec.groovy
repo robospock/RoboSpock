@@ -1,12 +1,12 @@
 package com.example.robospock
 
 import com.example.robospock.activity.MainActivity
+import com.example.robospock.shadow.MyActivityManagerShadow
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import com.example.robospock.shadow.MyActivityManagerShadow
 import util.SampleSpecification
 
-@Config(shadows = [MyActivityManagerShadow], manifest="./src/main/AndroidManifest.xml")
+@Config(shadows = [MyActivityManagerShadow])
 class ShadowSpec extends SampleSpecification {
 
     def "shouldCompile"() {
