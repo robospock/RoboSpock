@@ -52,17 +52,4 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.41'
 
     testCompile project(':robospock')
-
-    // robolectric requires is it to run
-    // if you're not using it in your code just leave it as a testCompile depedency
-    testCompile 'com.android.support:support-v4:19.0.1'
-
-    testCompile 'org.mockito:mockito-all:1.9.5'
-
-}
-
-task zip2jar(type: Zip, dependsOn: "compileReleaseJava") {
-    from 'build/intermediates/classes/release'
-    destinationDir = file('build/libs')
-    extension = "jar"
 }
