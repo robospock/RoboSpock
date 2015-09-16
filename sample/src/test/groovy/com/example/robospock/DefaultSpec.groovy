@@ -1,13 +1,13 @@
 package com.example.robospock
 
 import com.example.robospock.activity.MainActivity
+import com.example.robospock.shadow.MyActivityManagerShadow
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import com.example.robospock.shadow.MyActivityManagerShadow
-import util.SampleSpecification
+import pl.polidea.robospock.GradleRoboSpecification
 
-@Config(shadows = [MyActivityManagerShadow], manifest="./src/main/AndroidManifest.xml")
-class DefaultSpec extends SampleSpecification {
+@Config(shadows = [MyActivityManagerShadow], constants = BuildConfig)
+class DefaultSpec extends GradleRoboSpecification {
 
     def "should find text view and compare text value"() {
         given:
