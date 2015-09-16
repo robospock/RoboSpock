@@ -14,6 +14,8 @@ Setup
 
 Changelog
 =========
+0.8.0 - Adding GradleRoboSpecification. Use it for gradle project and easier integration.
+
 0.7.0 - Robolectric updated to 3.0
 
 0.6.0 - Robolectric updated to 2.4 and Groovy to 2.3.8
