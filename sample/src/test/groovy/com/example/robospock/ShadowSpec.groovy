@@ -4,7 +4,7 @@ import com.example.robospock.activity.MainActivity
 import com.example.robospock.shadow.MyActivityManagerShadow
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import pl.polidea.robospock.RoboSpecification
+import org.robospock.RoboSpecification
 
 @Config(shadows = [MyActivityManagerShadow], manifest = "src/main/AndroidManifest.xml")
 class ShadowSpec extends RoboSpecification {

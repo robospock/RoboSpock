@@ -4,7 +4,7 @@ import com.example.robospock.activity.MainActivity
 import com.example.robospock.shadow.MyActivityManagerShadow
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import pl.polidea.robospock.GradleRoboSpecification
+import org.robospock.GradleRoboSpecification
 
 @Config(shadows = [MyActivityManagerShadow], constants = BuildConfig)
 class DefaultSpec extends GradleRoboSpecification {

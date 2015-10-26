@@ -1,4 +1,4 @@
-package pl.polidea.robospock.internal;
+package org.robospock;
 
 import android.app.Application;
 import android.os.Build;

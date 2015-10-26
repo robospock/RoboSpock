@@ -1,8 +1,8 @@
-package pl.polidea.robospock.test.integration
+package org.robospock.test.integration
 
 import android.app.Activity
 import org.robolectric.Robolectric
-import pl.polidea.robospock.RoboSpecification
+import org.robospock.RoboSpecification
 import spock.lang.Unroll
 
 class ActivityCreationTest extends RoboSpecification {

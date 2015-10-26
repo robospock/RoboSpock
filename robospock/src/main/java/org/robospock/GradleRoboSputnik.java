@@ -1,4 +1,4 @@
-package pl.polidea.robospock.internal;
+package org.robospock;
 
 import org.junit.runners.model.InitializationError;
 import org.robolectric.annotation.Config;
