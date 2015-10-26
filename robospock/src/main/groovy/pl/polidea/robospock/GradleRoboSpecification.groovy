@@ -1,7 +1,7 @@
 package pl.polidea.robospock
 
 import org.junit.runner.RunWith
-import org.robospock.GradleRoboSputnik
+import org.robospock.internal.GradleRoboSputnik
 import spock.lang.Specification
 
 

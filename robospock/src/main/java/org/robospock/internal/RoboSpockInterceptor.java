@@ -1,4 +1,4 @@
-package org.robospock;
+package org.robospock.internal;
 
 import android.app.Application;
 import android.os.Build;
