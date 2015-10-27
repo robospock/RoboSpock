@@ -14,6 +14,8 @@ Setup
 
 Changelog
 =========
+1.0.0 - Bumping Spock version to 1.0 and Groovy according to Spock depdendency
+
 0.8.0 - Adding GradleRoboSpecification. Use it for gradle project and easier integration.
 
 0.7.0 - Robolectric updated to 3.0
