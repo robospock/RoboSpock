@@ -20,8 +20,7 @@ sourceSets {
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.3.8"
-    compile "org.spockframework:spock-core:0.7-groovy-2.0"
+    compile "org.spockframework:spock-core:1.0-groovy-2.4"
 
     // Android part
     compile "org.robolectric:robolectric:3.0"

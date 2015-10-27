@@ -1,4 +1,4 @@
-package pl.polidea.robospock.internal;
+package org.robospock.internal;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.runner.Description;
