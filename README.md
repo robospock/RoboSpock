@@ -11,6 +11,25 @@ Those are only contribution guidelines! To see the documentation, visit http://r
 
 Setup
 =====
+Setup Groovy integration:
+
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
+    }
+}
+
+apply plugin: 'groovyx.grooid.groovy-android'
+```
+    
+Add dependency (available on Maven central):  
+```
+testCompile 'org.robospock:robospock:1.0.0'
+```
 
 Changelog
 =========
