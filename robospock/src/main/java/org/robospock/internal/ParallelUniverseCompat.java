@@ -54,6 +54,7 @@ public class ParallelUniverseCompat implements ParallelUniverseInterface {
 
     @Override
     public void resetStaticState(Config config) {
+        RuntimeEnvironment.setMainThread(Thread.currentThread());
         Robolectric.reset();
 
         if (!loggingInitialized) {
