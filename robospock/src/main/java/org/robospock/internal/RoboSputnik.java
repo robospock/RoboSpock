@@ -189,7 +189,7 @@ public class RoboSputnik extends Runner implements Filterable, Sortable {
     public InstrumentationConfiguration createClassLoaderConfig() {
         return InstrumentationConfiguration.newBuilder()
 //                .doNotAquireClass(ShadowMap.class.getName())
-                .doNotAquireClass(DependencyResolver.class.getName())
+                .doNotAcquireClass(DependencyResolver.class.getName())
                 .build();
     }
 
