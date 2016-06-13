@@ -1,29 +1,18 @@
 package com.example.robospock.web;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class WebInterfaceImpl implements WebInterface {
     @Override
-    public String execute(final String resource) throws IllegalStateException, ClientProtocolException, IOException {
+    public String execute(final String resource) throws IllegalStateException, IOException {
         final InputStream content = getStream(resource);
         return convertStreamToString(content);
     }
 
     @Override
-    public File downloadFile(final String resource, final String path) throws ClientProtocolException, IOException {
+    public File downloadFile(final String resource, final String path) throws IOException {
         final InputStream content = getStream(resource);
         final File file = new File(path);
         saveStreamToFile(content, file);
@@ -31,8 +20,19 @@ public class WebInterfaceImpl implements WebInterface {
 
     }
 
-    private InputStream getStream(final String resource) throws IOException, ClientProtocolException {
-        return new DefaultHttpClient().execute(new HttpGet(resource)).getEntity().getContent();
+    private InputStream getStream(final String resource) throws IOException {
+        URL url = new URL(resource);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.connect();
+
+        // expect HTTP 200 OK, so we don't mistakenly save error report
+        // instead of the file
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Server returned HTTP " + connection.getResponseCode()
+                    + " " + connection.getResponseMessage());
+        }
+        return connection.getInputStream();
     }
 
     public static String convertStreamToString(final InputStream is) throws IOException {

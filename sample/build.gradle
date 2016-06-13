@@ -1,11 +1,14 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://jitpack.io"
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
-        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
-        classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.10'
+        classpath "com.github.JakeWharton:sdk-manager-plugin:e05218601b1274ea0721e13b33a426f641156f69"
     }
 }
 
@@ -20,8 +23,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         versionCode 1
