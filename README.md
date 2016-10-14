@@ -31,11 +31,13 @@ apply plugin: 'groovyx.android'
     
 Add dependency (available on Maven central):  
 ```
-testCompile 'org.robospock:robospock:1.0.0'
+testCompile 'org.robospock:robospock:1.0.1'
 ```
 
 Changelog
 =========
+1.0.1 - Adding support for Android Gradle Plugin 2.2.+
+
 1.0.0 - Bumping Spock version to 1.0 and Groovy according to Spock depdendency
 
 0.8.0 - Adding GradleRoboSpecification. Use it for gradle project and easier integration.
