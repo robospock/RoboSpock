@@ -49,7 +49,13 @@ public class GradleRoboSputnik extends RoboSputnik {
         }
 
         if (FileFsFile.from(BUILD_OUTPUT, "manifests").exists()) {
-            manifest = FileFsFile.from(BUILD_OUTPUT, "manifests", "full", flavor, type, "AndroidManifest.xml");
+            if(FileFsFile.from(BUILD_OUTPUT, "manifests", "full").exists()){
+                // pre Android Gradle 2.2
+                manifest = FileFsFile.from(BUILD_OUTPUT, "manifests", "full", flavor, type, "AndroidManifest.xml");
+            } else {
+                // Android Gradle 2.2.+
+                manifest = FileFsFile.from(BUILD_OUTPUT, "manifests", "aapt", flavor, type, "AndroidManifest.xml");
+            }
         } else {
             manifest = FileFsFile.from(BUILD_OUTPUT, "bundles", flavor, type, "AndroidManifest.xml");
         }
