@@ -15,15 +15,18 @@ Setup Groovy integration:
 
 ```
 buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
-    }
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.2.0'
+    classpath 'org.codehaus.groovy:groovy-android-gradle-plugin:1.1.0'
+  }
 }
 
-apply plugin: 'groovyx.grooid.groovy-android'
+apply plugin: 'com.android.application'
+apply plugin: 'groovyx.android'
 ```
     
 Add dependency (available on Maven central):  
