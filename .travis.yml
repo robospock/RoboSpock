@@ -1,2 +1,25 @@
 language: android
-sudo: false
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-25.0.0
+    - android-25
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+jdk:
+  - oraclejdk8
+
+before_install:
+  - cat /etc/hosts # optionally check the content *before*
+  - sudo hostname "$(hostname | cut -c1-63)"
+  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+  - cat /etc/hosts # optionally check the content *after*
+
+script: ./gradlew -q -s --debug --info clean assemble lint test
+
+cache:
+  directories:
+    - $HOME/.gradle
