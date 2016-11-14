@@ -1,2 +1,4 @@
 include ':robospock'
 include ':sample'
+
+rootProject.name = 'RoboSpock'

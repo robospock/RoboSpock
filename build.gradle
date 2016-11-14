@@ -1,14 +1,20 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-allprojects {
-
+buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
 
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'org.codehaus.groovy:groovy-android-gradle-plugin:1.1.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+    }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.6'
+allprojects {
+    repositories {
+        jcenter()
+    }
+
+    apply plugin: 'com.github.ben-manes.versions'
 }
 
